@@ -1,0 +1,72 @@
+import streamlit as st
+import os
+import sys
+import conteudo
+
+def load_css(file_name: str):
+    """Função para carregar CSS externo e aplicá-lo no Streamlit."""
+    with open(file_name, "r") as f:
+        css = f.read()
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
+# --- AJUSTE PARA NOVA ESTRUTURA ---
+# Diretório raiz do projeto (onde main.py está)
+project_root = os.path.dirname(os.path.abspath(__file__))
+
+# Caminho para a pasta 'componentes'
+componentes_dir = os.path.join(project_root, 'componentes')
+
+# Adiciona a pasta 'componentes' ao sys.path para que o Python encontre 'botao' e 'navbar'
+if componentes_dir not in sys.path:
+    sys.path.append(componentes_dir)
+
+# Importa as funções dos componentes das pastas locais
+# from botao.my_component import my_component as botao_component # Renomeia para clareza
+# from navbar.my_component import my_component as navbar_component # Renomeia para clareza
+from componente.my_component import my_component as componente
+# --- FIM DO AJUSTE ---
+
+st.set_page_config(layout="wide")
+load_css("assets/css/styles.css")
+
+# st.title("App Principal com Múltiplos Componentes")
+
+# --- Inicialização do Session State para a página ---
+if 'page' not in st.session_state:
+    st.session_state.page = "Home"
+# --- Fim da Inicialização ---
+
+# --- Renderização da Navbar e Atualização do Estado ---
+# st.header("Navegação")
+nav_items = ["Home", "Análise", "Configurações", "Sobre"]
+nav_icons = ["home", "bar_chart", "settings", "info"]
+
+# Chama o componente com ícones
+# clicked_page = navbar_component(items=nav_items, icons=nav_icons,user_name="", key="main_navbar")
+
+args_navbar = {
+    "tipo": "navbar2",
+    "opcoes": ["Resumo",'Introdução', "Fundamentos de ML", "Redes Neurais", "Ciência de Dados", "Aplicações"],
+}
+
+clicked_page = componente(**args_navbar, key="navbar_dinamica")
+# Atualiza o estado da página se um item diferente foi clicado
+if clicked_page is not None and clicked_page != st.session_state.page:
+    st.session_state.page = clicked_page
+    # O Streamlit geralmente faz o rerun automaticamente ao mudar o session_state
+    # st.experimental_rerun() # Descomente se o rerun automático não ocorrer
+# --- Fim da Navbar ---
+
+if st.session_state.page == "Resumo":
+    st.markdown(conteudo.resumo,unsafe_allow_html=True)
+
+if st.session_state.page == "Introdução":
+    st.markdown(conteudo.introducao2,unsafe_allow_html=True)
+
+
+# args_btn = {
+#     "tipo": "botao",
+#     "texto": "clique aqui",
+# }
+# clicked_page2 = componente(**args_btn, key="btn_dinamica")
+# st.write(f"Você clicou em: {clicked_page2}")
