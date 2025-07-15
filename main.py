@@ -46,7 +46,7 @@ nav_icons = ["home", "bar_chart", "settings", "info"]
 
 args_navbar = {
     "tipo": "navbar2",
-    "opcoes": ["Resumo",'Introdução', "Fundamentos de ML", "Redes Neurais", "Ciência de Dados", "Aplicações"],
+    "opcoes": ["Resumo",'Introdução', "Fundamentos de ML", "Ciência de Dados", "Redes Neurais", "Aplicações"],
 }
 
 clicked_page = componente(**args_navbar, key="navbar_dinamica")
@@ -61,7 +61,31 @@ if st.session_state.page == "Resumo":
     st.markdown(conteudo.resumo,unsafe_allow_html=True)
 
 if st.session_state.page == "Introdução":
-    st.markdown(conteudo.introducao2,unsafe_allow_html=True)
+    st.markdown(conteudo.introducao,unsafe_allow_html=True)
+
+if st.session_state.page == "Fundamentos de ML":
+    st.markdown("## Fundamentos do Machine Learning Supervisionado", unsafe_allow_html=True)
+    content = conteudo.fundamentos_dct
+    cols = st.columns([0.15,0.85])
+    for cnt in content:
+        atalho = cnt['titulo'].replace(" ", "_").lower()
+        cols[0].markdown(f"[{cnt['titulo']}](#{atalho})",unsafe_allow_html=True)
+        with cols[1].expander(cnt['titulo'], expanded=False):
+            st.markdown(f'''<a name={atalho}></a>''', unsafe_allow_html=True)
+            st.markdown(cnt['conteudo'], unsafe_allow_html=True) #cnt.split("\n")[1:], unsafe_allow_html=True)
+    
+if st.session_state.page == "Ciência de Dados":
+    content = conteudo.ciencia.split("####")
+    cols = st.columns([0.15,0.85])
+    cols[0].markdown("[Principais conceitos](#principais_conceitos)",unsafe_allow_html=True)
+    cols[0].markdown("[Treinamento](#treinamento)",unsafe_allow_html=True)
+    cols[1].markdown("## Fundamentos do Machine Learning Supervisionado", unsafe_allow_html=True)
+    with cols[1].expander('#### Introdução',expanded=True):
+        st.markdown(content[0], unsafe_allow_html=True)
+    for cnt in content[1:]:
+        with cols[1].expander(cnt.split("\n")[0].strip(), expanded=False):
+            st.markdown("\n".join(cnt.split("\n")[1:]), unsafe_allow_html=True) #cnt.split("\n")[1:], unsafe_allow_html=True)
+    # cols[1].markdown(conteudo.fundamentos,unsafe_allow_html=True)    
 
 
 # args_btn = {
