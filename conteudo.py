@@ -164,15 +164,34 @@ Podemos ilustrar esse comportamento com a **curva de erro** em função da capac
 O ponto ótimo de capacidade está geralmente associado a um equilíbrio entre **viés** (erro sistemático) e **variância** (sensibilidade a pequenas variações nos dados).
 
 
-Matematicamente, esse fenômeno pode ser estudado a partir da decomposição do erro esperado:
+Matematicamente, esse fenômeno pode ser estudado a partir da decomposição do erro esperado. 
+No contexto da aprendizagem supervisionada, a capacidade de um modelo generalizar bem para dados nunca vistos depende de como ele equilibra três componentes fundamentais do erro de previsão: o **viés**, a **variância** e o **ruído irredutível**. Essa análise é formalizada pela decomposição do **erro quadrático médio esperado** (Mean Squared Error – MSE), a qual permite interpretar separadamente os fatores que contribuem para o desempenho de um preditor em um ponto fixo de entrada $\mathbf{x}$. A fórmula da decomposição é dada por:
 
 $$
-\mathbb{E}_{\mathcal{D}}[(f_{\\theta}(\mathbf{x}) - y)^2] = \\text{viés}^2 + \\text{variância} + \\text{ruído irredutível}.
+\mathbb{E}_{\mathcal{D}, y} \left[ (y - \hat{f}(\mathbf{x}; \mathcal{D}))^2 \\right] = \left( \\text{Bias}[\hat{f}(\mathbf{x})] \\right)^2 + \\text{Var}[\hat{f}(\mathbf{x})] + \sigma^2.
 $$
 
-- Um modelo com **alto viés** tende a subestimar a complexidade da função verdadeira;
-- Um modelo com **alta variância** se adapta demais às amostras do treinamento;
-- O **ruído irredutível** representa a variabilidade intrínseca dos dados, que nenhum modelo pode eliminar.
+A expectativa do lado esquerdo é calculada sobre dois níveis de aleatoriedade: o conjunto de dados de treinamento $\mathcal{D}$ e o ruído na variável resposta $y$. O termo $\hat{f}(\mathbf{x}; \mathcal{D})$ representa a predição do modelo treinado sobre um conjunto $\mathcal{D}$, avaliado em um ponto fixo $\mathbf{x}$ — tipicamente, um ponto fora da amostra de treinamento.
+
+O **viés** mede o desvio sistemático entre a média das predições do modelo e a verdadeira função $f(\mathbf{x})$. Formalmente, é definido por:
+
+$$
+\\text{Bias}[\hat{f}(\mathbf{x})] = \mathbb{E}_{\mathcal{D}}[\hat{f}(\mathbf{x}; \mathcal{D})] - f(\mathbf{x}).
+$$
+
+Um viés elevado surge quando o modelo é demasiadamente rígido ou simples, de modo que não consegue capturar a complexidade da função verdadeira que governa os dados. Por exemplo, tentar ajustar um padrão altamente não linear com um modelo linear resultará em uma predição sistematicamente equivocada, independentemente do conjunto de dados usado. Essa característica está associada ao fenômeno conhecido como **underfitting**, no qual o modelo falha em aprender até mesmo os principais padrões da estrutura dos dados.
+
+Por sua vez, a **variância** reflete o grau de instabilidade do modelo ao longo de diferentes amostras de treinamento. Sua expressão matemática é:
+
+$$
+\\text{Var}[\hat{f}(\mathbf{x})] = \mathbb{E}_{\mathcal{D}} \left[ \left( \hat{f}(\mathbf{x}; \mathcal{D}) - \mathbb{E}_{\mathcal{D}}[\hat{f}(\mathbf{x}; \mathcal{D})] \\right)^2 \\right].
+$$
+
+Esse termo quantifica o quanto as predições variam para um ponto fixo $\mathbf{x}$ quando o modelo é treinado em diferentes amostras $\mathcal{D}$ extraídas da mesma distribuição de dados. Portanto, ele **não mede a sensibilidade do modelo a entradas diferentes**, mas sim **à escolha da amostra de treinamento**. Quando a variância é alta, o modelo tende a se ajustar ao ruído específico dos dados de treino, produzindo predições inconsistentes em novos dados — uma situação típica de **sobreajuste (overfitting)**. Esse tipo de modelo pode ter desempenho quase perfeito no treinamento, mas fracassar ao generalizar para dados reais.
+
+O terceiro termo da decomposição é o **erro irredutível**, representado por $\sigma^2$, que corresponde à variância intrínseca dos dados em torno da verdadeira função $f(\mathbf{x})$. Esse erro resulta de fatores imprevisíveis, variabilidade natural ou medições imprecisas que afetam a variável resposta $y$. Independentemente do modelo utilizado, essa incerteza não pode ser eliminada — ela representa o limite teórico inferior para o erro de qualquer estimativa.
+
+A decomposição do erro esperado permite, assim, compreender o **trade-off entre viés e variância**. Modelos simples tendem a apresentar baixo risco de variância, mas alto viés, enquanto modelos complexos reduzem o viés, mas amplificam a variância. O desafio central do aprendizado de máquina é encontrar um ponto de equilíbrio entre essas forças opostas, minimizando o erro total. Esse equilíbrio é influenciado não apenas pela escolha do modelo, mas também pelo tamanho e pela diversidade do conjunto de dados, bem como pelas técnicas de regularização e validação utilizadas.
 
 
 Portanto, escolher um modelo adequado envolve:
