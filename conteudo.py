@@ -1,5 +1,6 @@
 fundamentos_dct = [
-  {'titulo':"Introdução", 'conteudo':'''<div align="justify">
+  {
+    'titulo':"Introdução", 'conteudo':'''<div align="justify">
 
 O aprendizado de máquina, embora popularmente associado à construção empírica de modelos a partir de grandes volumes de dados, repousa sobre uma infraestrutura teórica robusta, cujos alicerces se encontram, sobretudo, na **matemática** e na **estatística**. Estas duas áreas, embora distintas em seus enfoques, atuam de forma complementar e indispensável para garantir que os modelos de machine learning não apenas funcionem computacionalmente, mas sejam **teoricamente justificáveis** e **estatisticamente confiáveis**.
 
@@ -29,7 +30,8 @@ Em síntese, a **matemática contribui com a estrutura e a resolução computaci
 
 Portanto, o aprendizado de máquina moderno deve ser compreendido não como um processo empírico e opaco, mas como um **procedimento matemático-estatístico rigoroso**, no qual **funções são otimizadas, incertezas são quantificadas, e previsões são sustentadas por princípios sólidos**. É esse entrelaçamento de teoria matemática com inferência estatística que confere ao aprendizado de máquina o seu caráter científico e o seu poder preditivo.
 
-</div>'''},
+</div>'''
+},
   {'titulo':"Conceitos Essenciais", 'conteudo':'''<div align="justify">
 
 O **Aprendizado de Máquina (Machine Learning)** é uma subárea da inteligência artificial voltada para o desenvolvimento de algoritmos capazes de aprender a realizar tarefas a partir de dados. Em termos formais, segundo a definição clássica de Tom Mitchell, *“um programa de computador é dito aprender de uma experiência $E$ com relação a uma tarefa $T$ e uma medida de desempenho $P$, se seu desempenho em $T$, medido por $P$, melhora com a experiência $E$”*.
@@ -159,7 +161,7 @@ Já o **Overfitting** (sobreajuste) acontece quando o modelo tem **capacidade ex
 Podemos ilustrar esse comportamento com a **curva de erro** em função da capacidade do modelo:
 
 <p align="center">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Overfitting_svg.svg/800px-Overfitting_svg.svg.png" width="400"/>
+<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/erro_decomposicao_teorico.png" width="400"/>
 </p>
 
 O ponto ótimo de capacidade está geralmente associado a um equilíbrio entre **viés** (erro sistemático) e **variância** (sensibilidade a pequenas variações nos dados).
