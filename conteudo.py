@@ -21,7 +21,7 @@ $$
 \\text{Erro total} = \\text{Viés}^2 + \\text{Variância} + \\text{Ruído irreducível}
 $$
 
-fornece uma lente analítica para entender os trade-offs entre modelos mais simples (alta tendência ao viés) e modelos mais complexos (alta variância), sendo a base para técnicas como regularização, seleção de modelos e escolha de hiperparâmetros.
+fornece uma lente analítica para entender as compensações entre modelos mais simples (alta tendência ao viés) e modelos mais complexos (alta variância), sendo a base para técnicas como regularização, seleção de modelos e escolha de hiperparâmetros.
 
 Além disso, a estatística oferece **garantias teóricas**, como limites de generalização baseados em desigualdades de concentração (Hoeffding, McDiarmid) ou dimensões de complexidade (VC-dimension, Rademacher complexity), que justificam, sob determinadas condições, que **o desempenho em um conjunto de treino é um bom preditor do desempenho futuro** — fundamento este sem o qual o uso prático de modelos seria meramente especulativo.
 
@@ -132,7 +132,8 @@ $$
 desde que $\mathbf{X}^\\top \mathbf{X}$ seja invertível. Esse resultado é conhecido como **equação normal** da regressão linear.
 
 </div>'''},
-{'titulo':"Capacidade do Modelo, Subajuste e Sobreajuste", 'conteudo':'''<div align="justify">
+{
+  'titulo':"Capacidade do Modelo, Subajuste e Sobreajuste", 'conteudo':'''<div align="justify">
 
 Ao treinar um modelo de aprendizado de máquina, o objetivo não é apenas ajustar-se bem aos dados de treinamento, mas sim **generalizar** para novos dados nunca vistos. Compreender os conceitos de **capacidade do modelo**, **subajuste** (*underfitting*) e **sobreajuste** (*overfitting*) é essencial para alcançar esse objetivo.
 
@@ -191,7 +192,7 @@ Esse termo quantifica o quanto as predições variam para um ponto fixo $\mathbf
 
 O terceiro termo da decomposição é o **erro irredutível**, representado por $\sigma^2$, que corresponde à variância intrínseca dos dados em torno da verdadeira função $f(\mathbf{x})$. Esse erro resulta de fatores imprevisíveis, variabilidade natural ou medições imprecisas que afetam a variável resposta $y$. Independentemente do modelo utilizado, essa incerteza não pode ser eliminada — ela representa o limite teórico inferior para o erro de qualquer estimativa.
 
-A decomposição do erro esperado permite, assim, compreender o **trade-off entre viés e variância**. Modelos simples tendem a apresentar baixo risco de variância, mas alto viés, enquanto modelos complexos reduzem o viés, mas amplificam a variância. O desafio central do aprendizado de máquina é encontrar um ponto de equilíbrio entre essas forças opostas, minimizando o erro total. Esse equilíbrio é influenciado não apenas pela escolha do modelo, mas também pelo tamanho e pela diversidade do conjunto de dados, bem como pelas técnicas de regularização e validação utilizadas.
+A decomposição do erro esperado permite, assim, compreender a **compensação entre viés e variância**. Modelos simples tendem a apresentar baixo risco de variância, mas alto viés, enquanto modelos complexos reduzem o viés, mas amplificam a variância. O desafio central do aprendizado de máquina é encontrar um ponto de equilíbrio entre essas forças opostas, minimizando o erro total. Esse equilíbrio é influenciado não apenas pela escolha do modelo, mas também pelo tamanho e pela diversidade do conjunto de dados, bem como pelas técnicas de regularização e validação utilizadas.
 
 
 Portanto, escolher um modelo adequado envolve:
@@ -214,7 +215,51 @@ Essa divisão também possibilita uma *avaliação empírica indireta dos compon
 Finalmente, vale destacar que essas práticas se alinham aos princípios de *planejamento experimental* e *validação cruzada* amplamente utilizados em estatística. Ao garantir que as inferências sejam feitas sobre dados independentes, evita-se a contaminação por dependências induzidas pelo treinamento, assegurando que os modelos produzidos não apenas se ajustem aos dados passados, mas também se sustentem *como preditores confiáveis para o futuro*.
 
 ---
-</div>'''},
+</div>'''
+},
+{
+  'titulo':'Exemplo experimental', 
+  'conteudo':'''<div align="justify">
+  
+  Podemos visualizar empiricamente o comportamento dos erros de generalização de um modelo de regressão supervisionada por meio de um experimento que simula diferentes níveis de complexidade indutiva. Para isso, consideramos como função alvo a ser aprendida a expressão não linear e suave:
+
+$$
+f(x) = 2x + \cos(4\pi x), \quad x \in [0,1].
+$$
+
+O objetivo é construir modelos aproximadores dessa função a partir de amostras com ruído e avaliar, para diferentes níveis de complexidade, os erros de viés, variância e ruído irreducível que compõem o erro quadrático médio esperado.
+
+Para aproximar $ f(x) $, usamos uma família de modelos polinomiais da forma:
+
+$$
+f_\\alpha(x) = \sum_{k=0}^{d} a_k x^k,
+$$
+
+onde os coeficientes $ a_k $ são aprendidos a partir de dados sintéticos gerados com ruído aditivo gaussiano. A complexidade do modelo é controlada por meio de uma **regularização suave** imposta diretamente sobre os coeficientes, com o intuito de penalizar fortemente termos de alta ordem. Essa regularização é implementada por uma estrutura de decaimento exponencial, penalizando coeficientes segundo:
+
+$$
+\\text{Penalidade:} \quad \sum_{k=0}^{d} \left( \\frac{a_k}{\\alpha^k} \\right)^2,
+$$
+
+onde $ \\alpha \in (0,1] $ é o **parâmetro de regularização** que controla a complexidade do modelo, e $ M $ é um hiperparâmetro multiplicativo fixo. Valores menores de $ \\alpha $ impõem maior decaimento e restrição à magnitude dos coeficientes de ordem elevada, resultando em modelos mais suaves e de baixa capacidade. Por outro lado, valores de $ \\alpha $ mais próximos de 1 permitem que o modelo expresse maior variação e detalhes locais, o que pode levar ao sobreajuste.
+
+A cada iteração do experimento, geramos um conjunto de dados de treinamento $ \{(x_i, y_i)\}_{i=1}^n $, com $ x_i \sim \mathcal{U}(0,1) $ e $ y_i = f(x_i) + \\varepsilon_i $, onde $ \\varepsilon_i \sim \mathcal{N}(0, \sigma^2) $. O modelo $ f_\\alpha $ é então ajustado minimizando a seguinte função de perda regularizada:
+
+$$
+\min_{a_0,\ldots,a_d} \left\{ \\frac{1}{n} \sum_{i=1}^{n} \left(y_i - \sum_{k=0}^{d} a_k x_i^k \\right)^2 + \lambda \sum_{k=0}^{d} \left( \\frac{a_k}{\\alpha^k} \\right)^2 \\right\},
+$$
+
+onde $ \lambda $ é um parâmetro que controla a força da penalização. Essa minimização é realizada para diferentes valores de $ \\alpha $, mantendo fixos o número de amostras, a variância do ruído, e o grau máximo do polinômio. Para cada $ \\alpha $, o experimento é repetido sobre diversos conjuntos de dados distintos, e as predições do modelo são avaliadas em um conjunto fixo de pontos $ \{x^{(j)}\}_{j=1}^{m} $ não vistos no treinamento. A partir dessas predições, calcula-se o viés quadrático como a média do quadrado da diferença entre a predição média e o valor verdadeiro de $ f(x) $, a variância como a variância empírica das predições ao longo dos datasets, e o ruído como a variância do erro aditivo conhecido.
+
+A variação do parâmetro $ \\alpha $ permite então observar como a capacidade do modelo influencia o erro de generalização. Espera-se que, para valores muito pequenos de $ \\alpha $, o modelo tenha baixa variância, mas alto viés, devido à incapacidade de capturar adequadamente a oscilação da função alvo — caracterizando um regime de underfitting. À medida que $ \\alpha $ cresce, o viés tende a diminuir, mas a variância pode aumentar sensivelmente, indicando sobreajuste ao ruído dos dados. O valor ótimo de $ \\alpha $ é aquele que minimiza a soma total dos erros, equilibrando a capacidade de generalização com a fidelidade à função verdadeira.
+
+Esse experimento ilustra de maneira clara o papel dos hiperparâmetros na regulação da complexidade de modelos de aprendizado e fornece uma ferramenta empírica útil para compreender a compensação entre viés e variância, que está no cerne da teoria estatística do aprendizado de máquina.
+
+
+  </div>
+  '''
+
+},
 {'titulo':"Métricas de Avaliação", 'conteudo':'''<div align="justify">
 
 Um aspecto sutil, mas conceitualmente importante no estudo de Machine Learning, é a distinção entre a **função de perda (loss function)** e as **métricas de avaliação**. Embora ambas sirvam para quantificar o desempenho de modelos, elas têm **papéis e objetivos diferentes** dentro do processo de modelagem.
@@ -341,7 +386,7 @@ $$
 - A **acurácia** é uma boa métrica quando as classes estão balanceadas;
 - A **precisão** é preferida quando os **falsos positivos** são mais prejudiciais;
 - O **recall** é importante quando os **falsos negativos** são críticos;
-- O **F1-score** é útil quando há **trade-off entre precisão e recall**.
+- O **F1-score** é útil quando há **compensação entre precisão e recall**.
 
 </div>'''},
 {'titulo':"Regressões Linear e Logística", 'conteudo':'''<strong>2.3.1 Regressão Linear e Logística</strong> 
@@ -726,7 +771,7 @@ $$
 \\text{Erro total} = \\text{Viés}^2 + \\text{Variância} + \\text{Ruído irreducível}
 $$
 
-fornece uma lente analítica para entender os trade-offs entre modelos mais simples (alta tendência ao viés) e modelos mais complexos (alta variância), sendo a base para técnicas como regularização, seleção de modelos e escolha de hiperparâmetros.
+fornece uma lente analítica para entender os compensações entre modelos mais simples (alta tendência ao viés) e modelos mais complexos (alta variância), sendo a base para técnicas como regularização, seleção de modelos e escolha de hiperparâmetros.
 
 Além disso, a estatística oferece **garantias teóricas**, como limites de generalização baseados em desigualdades de concentração (Hoeffding, McDiarmid) ou dimensões de complexidade (VC-dimension, Rademacher complexity), que justificam, sob determinadas condições, que **o desempenho em um conjunto de treino é um bom preditor do desempenho futuro** — fundamento este sem o qual o uso prático de modelos seria meramente especulativo.
 
@@ -1126,7 +1171,7 @@ $$
 - A **acurácia** é uma boa métrica quando as classes estão balanceadas;
 - A **precisão** é preferida quando os **falsos positivos** são mais prejudiciais;
 - O **recall** é importante quando os **falsos negativos** são críticos;
-- O **F1-score** é útil quando há **trade-off entre precisão e recall**.
+- O **F1-score** é útil quando há **compensação entre precisão e recall**.
 
 </div>
 
