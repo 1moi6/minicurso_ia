@@ -1179,3 +1179,87 @@ $$
 
 </div>
 '''
+
+
+redes_neurais = [
+    {
+        'titulo':'Neurônios Artificiais',
+        'conteudo':'''<div align="justify">
+
+Os **neurônios artificiais** constituem os blocos fundamentais das redes neurais profundas. Inspirados de forma abstrata nos neurônios biológicos, cada unidade computacional realiza uma transformação dos dados de entrada por meio de uma **operação afim**, seguida da aplicação de uma **função de ativação não-linear**. Essa composição simples é suficiente para tornar a rede capaz de aprender aproximações de funções complexas, desde que parametrizada e treinada adequadamente.
+
+Considere uma entrada vetorial $\mathbf{x} \in \mathbb{R}^n$ e um conjunto de parâmetros (pesos sinápticos) $\mathbf{w} \in \mathbb{R}^n$ e um viés escalar $b \in \mathbb{R}$. Um **neurônio artificial** é uma operação matemática definidas pelas duas etapas seguintes:
+
+1. Cálculo da pré-ativação (combinação linear):
+
+$$
+z = \mathbf{w}^\\top \mathbf{x} + b
+$$
+
+2. Aplicação da função de ativação $f$:
+
+$$
+a = f(z)
+$$
+
+em que $a$ representa a saída do neurônio. O papel da função $f$ é introduzir **não-linearidade**, permitindo que a rede aprenda representações que não poderiam ser capturadas por modelos lineares.
+
+
+A **função de ativação** $f$ é aplicada ponto a ponto e desempenha um papel central na capacidade da rede de modelar funções não lineares. Sem essas funções, a composição de várias camadas seria ainda uma função linear do dado de entrada, limitando drasticamente a expressividade do modelo.
+
+A  função de ativação **sigmoide** mapeia números reais para o intervalo aberto $(0, 1)$, sendo útil para representar probabilidades, por meio da transformação:
+
+$$
+f(z) = \\frac{1}{1 + e^{-z}}
+$$
+
+Embora tenha sido amplamente utilizada, especialmente em saídas de classificação binária, apresenta **regiões de saturação** onde o gradiente se torna muito pequeno, dificultando o aprendizado em redes profundas.
+
+
+Já a função de ativação **ReLU** é definida por:
+
+$$
+f(z) = \max(0, z)
+$$
+
+Trata-se de uma função **linear por partes**, amplamente adotada devido à sua eficiência computacional e à sua capacidade de manter gradientes significativos em grande parte do domínio. No entanto, para valores negativos de $z$, a saída é nula, o que pode levar a **neurônios inativos** durante o treinamento.
+
+A função de ativação **Leaky ReLU** propõe uma pequena inclinação no ramo negativo para evitar a inatividade total:
+
+$$
+f(z) = \left\{
+  \\begin{array}{ll}
+    z & \\text{se } z > 0 \\\\
+    \\alpha z & \\text{se } z \leq 0
+  \end{array}
+\\right.
+$$
+
+
+comumente, $\\alpha = 0{,}01$.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/erro_decomposicao_teorico.png" width="400"/>
+</p>
+
+Finalmente, a função **softmax** é usada na **camada de saída** em tarefas de **classificação multiclasse**, convertendo um vetor de valores reais $(z_1, \dots, z_K)$ em uma **distribuição de probabilidade** sobre $K$ classes:
+
+$$
+\\text{softmax}(z_i) = \\frac{e^{z_i}}{\sum_{j=1}^K e^{z_j}}
+$$
+
+Essa função assegura que cada saída esteja no intervalo $(0,1)$ e que a soma total das saídas seja igual a 1. Em termos computacionais, a softmax permite que o modelo represente **incerteza** sobre múltiplas classes, ao mesmo tempo em que mantém uma estrutura compatível com o treinamento por **máxima verossimilhança**.
+
+As funções de ativação determinam o comportamento dinâmico das redes neurais e influenciam diretamente a **propagação do gradiente** durante o treinamento. A escolha da função ideal depende do contexto da tarefa e da profundidade da rede. Em termos práticos:
+
+- **ReLU e suas variantes** são preferidas nas **camadas ocultas** devido à sua simplicidade e eficácia.
+- **Sigmoide e softmax** são mais apropriadas para **camadas de saída**, especialmente em problemas supervisionados com interpretação probabilística.
+
+Combinadas com transformações lineares, essas funções de ativação compõem o alicerce do aprendizado profundo, fornecendo os mecanismos pelos quais redes neurais conseguem modelar fenômenos altamente não-lineares.
+
+</div>
+
+'''
+    }
+
+]
