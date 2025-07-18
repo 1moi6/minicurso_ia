@@ -1239,7 +1239,7 @@ $$
 comumente, $\\alpha = 0{,}01$.
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/erro_decomposicao_teorico.png" width="400"/>
+<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/ativacao.png" width="500"/>
 </p>
 
 Finalmente, a função **softmax** é usada na **camada de saída** em tarefas de **classificação multiclasse**, convertendo um vetor de valores reais $(z_1, \dots, z_K)$ em uma **distribuição de probabilidade** sobre $K$ classes:
