@@ -1,6 +1,6 @@
 fundamentos_dct = [
-  {
-    'titulo':"Introdução", 'conteudo':'''<div align="justify">
+    {
+        'titulo': "Introdução", 'conteudo': '''<div align="justify">
 
 O aprendizado de máquina, embora popularmente associado à construção empírica de modelos a partir de grandes volumes de dados, repousa sobre uma infraestrutura teórica robusta, cujos alicerces se encontram, sobretudo, na **matemática** e na **estatística**. Estas duas áreas, embora distintas em seus enfoques, atuam de forma complementar e indispensável para garantir que os modelos de machine learning não apenas funcionem computacionalmente, mas sejam **teoricamente justificáveis** e **estatisticamente confiáveis**.
 
@@ -31,8 +31,8 @@ Em síntese, a **matemática contribui com a estrutura e a resolução computaci
 Portanto, o aprendizado de máquina moderno deve ser compreendido não como um processo empírico e opaco, mas como um **procedimento matemático-estatístico rigoroso**, no qual **funções são otimizadas, incertezas são quantificadas, e previsões são sustentadas por princípios sólidos**. É esse entrelaçamento de teoria matemática com inferência estatística que confere ao aprendizado de máquina o seu caráter científico e o seu poder preditivo.
 
 </div>'''
-},
-  {'titulo':"Conceitos Essenciais", 'conteudo':'''<div align="justify">
+    },
+    {'titulo': "Conceitos Essenciais", 'conteudo': '''<div align="justify">
 
 O **Aprendizado de Máquina (Machine Learning)** é uma subárea da inteligência artificial voltada para o desenvolvimento de algoritmos capazes de aprender a realizar tarefas a partir de dados. Em termos formais, segundo a definição clássica de Tom Mitchell, *“um programa de computador é dito aprender de uma experiência $E$ com relação a uma tarefa $T$ e uma medida de desempenho $P$, se seu desempenho em $T$, medido por $P$, melhora com a experiência $E$”*.
 
@@ -57,7 +57,7 @@ Essas tarefas exigem técnicas distintas de modelagem, mas compartilham a estrut
 Outro conceito relevante é o de **conjunto de validação**, usado para ajustar hiperparâmetros e evitar sobreajuste ao conjunto de treinamento. Após essa etapa, um conjunto de teste independente é utilizado para estimar a performance final do modelo.
 
 </div>'''},
-{'titulo':"Treinamento", 'conteudo':'''<div align="justify">
+    {'titulo': "Treinamento", 'conteudo': '''<div align="justify">
 
 O **processo de treinamento** em aprendizado supervisionado visa ajustar os **parâmetros internos** de um modelo de modo que ele seja capaz de aprender a partir dos dados. Dado um conjunto de treinamento $D = \{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^m$, o objetivo do aprendizado é encontrar uma função $f_{\\theta}$, parametrizada por $\\theta$, que minimize uma função de custo (ou perda), que quantifica o erro entre a predição do modelo $f_{\\theta}(\mathbf{x}^{(i)})$ e o rótulo verdadeiro $y^{(i)}$.
 
@@ -134,8 +134,8 @@ $$
 desde que $\mathbf{X}^\\top \mathbf{X}$ seja invertível. Esse resultado é conhecido como **equação normal** da regressão linear.
 
 </div>'''},
-{
-  'titulo':"Capacidade do Modelo, Subajuste e Sobreajuste", 'conteudo':'''<div align="justify">
+    {
+        'titulo': "Capacidade do Modelo, Subajuste e Sobreajuste", 'conteudo': '''<div align="justify">
 
 Ao treinar um modelo de aprendizado de máquina, o objetivo não é apenas ajustar-se bem aos dados de treinamento, mas sim **generalizar** para novos dados nunca vistos. Compreender os conceitos de **capacidade do modelo**, **subajuste** (*underfitting*) e **sobreajuste** (*overfitting*) é essencial para alcançar esse objetivo.
 
@@ -218,10 +218,10 @@ Finalmente, vale destacar que essas práticas se alinham aos princípios de *pla
 
 ---
 </div>'''
-},
-{
-  'titulo':'Exemplo experimental', 
-  'conteudo':'''<div align="justify">
+    },
+    {
+        'titulo': 'Exemplo experimental',
+        'conteudo': '''<div align="justify">
   
   Podemos visualizar empiricamente o comportamento dos erros de generalização de um modelo de regressão supervisionada por meio de um experimento que simula diferentes níveis de complexidade indutiva. Para isso, consideramos como função alvo a ser aprendida a expressão não linear e suave:
 
@@ -255,14 +255,19 @@ onde $ \lambda $ é um parâmetro que controla a força da penalização. Essa m
 
 A variação do parâmetro $ \\alpha $ permite então observar como a capacidade do modelo influencia o erro de generalização. Espera-se que, para valores muito pequenos de $ \\alpha $, o modelo tenha baixa variância, mas alto viés, devido à incapacidade de capturar adequadamente a oscilação da função alvo — caracterizando um regime de underfitting. À medida que $ \\alpha $ cresce, o viés tende a diminuir, mas a variância pode aumentar sensivelmente, indicando sobreajuste ao ruído dos dados. O valor ótimo de $ \\alpha $ é aquele que minimiza a soma total dos erros, equilibrando a capacidade de generalização com a fidelidade à função verdadeira.
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/erro_decomposicao_experimental.png" width="400"/>
+</p>
+
+
 Esse experimento ilustra de maneira clara o papel dos hiperparâmetros na regulação da complexidade de modelos de aprendizado e fornece uma ferramenta empírica útil para compreender a compensação entre viés e variância, que está no cerne da teoria estatística do aprendizado de máquina.
 
 
   </div>
   '''
 
-},
-{'titulo':"Métricas de Avaliação", 'conteudo':'''<div align="justify">
+    },
+    {'titulo': "Métricas de Avaliação", 'conteudo': '''<div align="justify">
 
 Um aspecto sutil, mas conceitualmente importante no estudo de Machine Learning, é a distinção entre a **função de perda (loss function)** e as **métricas de avaliação**. Embora ambas sirvam para quantificar o desempenho de modelos, elas têm **papéis e objetivos diferentes** dentro do processo de modelagem.
 
@@ -391,7 +396,7 @@ $$
 - O **F1-score** é útil quando há **compensação entre precisão e recall**.
 
 </div>'''},
-{'titulo':"Regressões Linear e Logística", 'conteudo':'''<strong>2.3.1 Regressão Linear e Logística</strong> 
+    {'titulo': "Regressões Linear e Logística", 'conteudo': '''<strong>2.3.1 Regressão Linear e Logística</strong> 
 
 <div align="justify">
 
@@ -515,7 +520,7 @@ Esse procedimento é repetido iterativamente até convergência, geralmente moni
 ]
 
 
-resumo='''### Resumo
+resumo = '''### Resumo
 
 <div align="justify">
 O presente material visa explorar a interseção fundamental entre <strong>Inteligência Artificial (IA)</strong>, <strong>Machine Learning (ML)</strong> e <strong>Matemática</strong>, com um foco particular nas <strong>Redes Neurais Artificiais (RNAs)</strong> aplicadas a problemas de <strong>classificação</strong>.
@@ -564,7 +569,7 @@ Ao longo do texto, <strong>exemplos e aplicações em biomatemática</strong> se
 </div>
 '''
 
-introducao='''
+introducao = '''
 <div align="justify">
 
 ### 1. Introdução: A Convergência de IA, ML e Matemática
@@ -1183,8 +1188,34 @@ $$
 
 redes_neurais = [
     {
-        'titulo':'Neurônios Artificiais',
-        'conteudo':'''<div align="justify">
+
+        'titulo': 'Apresentação',
+        'conteudo': '''
+    
+    <div align="justify">
+    
+ As **Redes Neurais Artificiais (RNAs)** representam um dos pilares centrais do aprendizado profundo e consistem em modelos matemáticos inspirados, de forma abstrata, na organização e funcionamento dos neurônios biológicos. Tais redes são compostas por unidades computacionais chamadas **neurônios artificiais**, dispostas em **camadas** e interconectadas por **pesos sinápticos** ajustáveis. A capacidade das redes neurais em aprender padrões complexos reside na composição sistemática de operações lineares e não lineares, formando um arcabouço computacional altamente expressivo.
+
+Neste capítulo, exploraremos a arquitetura fundamental das RNAs com ênfase em seus componentes essenciais:
+
+- A estrutura matemática do **neurônio artificial**, responsável por transformar vetores de entrada em ativações, utilizando combinações lineares seguidas por funções não-lineares denominadas **funções de ativação**;
+- A organização dos neurônios em **camadas densas** (ou fully connected), em que cada unidade se conecta a todas as unidades da camada subsequente;
+- O conceito de **profundidade** de uma rede, que está diretamente associado ao número de camadas ocultas e influencia sua capacidade de representação e generalização;
+- O processo de **propagação direta (feedforward)**, responsável pelo fluxo de informação da entrada até a saída da rede, sem recursividade;
+- A **fase de treinamento supervisionado**, na qual os parâmetros da rede (pesos e vieses) são atualizados iterativamente com base na minimização de uma função de custo, frequentemente por meio de algoritmos de otimização baseados em gradiente, como o método do gradiente descendente estocástico (SGD);
+- O papel das **funções de ativação**, que quebram a linearidade das operações matriciais e permitem que a rede aprenda representações não triviais dos dados.
+
+Ao longo do capítulo, abordaremos ainda aspectos formais do funcionamento das redes neurais, incluindo sua representação matricial, análise vetorial da propagação de sinais, e os fundamentos diferenciais envolvidos na retropropagação do erro. A apresentação será orientada por exemplos simples, acompanhada por visualizações e expressões matemáticas rigorosas, com vistas a desenvolver uma compreensão conceitual sólida e analítica do comportamento dessas redes.
+
+Este capítulo não se propõe apenas a apresentar as RNAs como uma ferramenta computacional, mas a examinar seus fundamentos com o rigor matemático apropriado ao público da matemática aplicada, evidenciando como álgebra linear, cálculo diferencial e estatística convergem para formar a base teórica do aprendizado profundo.
+    </div>
+
+    '''
+    },
+
+    {
+        'titulo': 'Neurônios Artificiais',
+        'conteudo': '''<div align="justify">
 
 Os **neurônios artificiais** constituem os blocos fundamentais das redes neurais profundas. Inspirados de forma abstrata nos neurônios biológicos, cada unidade computacional realiza uma transformação dos dados de entrada por meio de uma **operação afim**, seguida da aplicação de uma **função de ativação não-linear**. Essa composição simples é suficiente para tornar a rede capaz de aprender aproximações de funções complexas, desde que parametrizada e treinada adequadamente.
 
@@ -1260,6 +1291,76 @@ Combinadas com transformações lineares, essas funções de ativação compõem
 </div>
 
 '''
+    },
+    {
+        'titulo': 'Camadas Densas',
+        'conteudo': '''<div align="justify">
+
+As **Redes Neurais Feedforward Densas** (em inglês, *Dense Feedforward Neural Networks*), também conhecidas como **Perceptrons Multicamadas** (*Multilayer Perceptrons*, ou MLPs), constituem uma das arquiteturas mais fundamentais do aprendizado profundo. Essas redes realizam transformações sucessivas sobre os dados por meio de camadas de neurônios interconectados, nas quais a informação flui em **uma única direção** — da entrada à saída — sem ciclos ou realimentações.
+
+A estrutura básica de uma MLP é composta por três blocos principais:
+
+- Uma **camada de entrada** (*input layer*), que recebe o vetor de características do dado;
+- Uma ou mais **camadas ocultas** (*hidden layers*), responsáveis pela construção de representações internas por meio de transformações parametrizadas;
+- Uma **camada de saída** (*output layer*), que fornece a predição final da rede.
+
+
+Cada **camada** da rede pode ser interpretada como um **bloco funcional** que transforma um vetor de entrada $\mathbf{a}^{(\ell-1)} \in \mathbb{R}^{m_{\ell-1}}$ em um vetor de saída $\mathbf{a}^{(\ell)} \in \mathbb{R}^{m_\ell}$, por meio de uma transformação afim seguida de uma ativação não linear:
+
+$$
+\mathbf{z}^{(\ell)} = \mathbf{W}^{(\ell)} \mathbf{a}^{(\ell-1)} + \mathbf{b}^{(\ell)} \\
+\mathbf{a}^{(\ell)} = f^{(\ell)}\left(\mathbf{z}^{(\ell)}\\right)
+$$
+
+onde:
+
+- $\mathbf{W}^{(\ell)} \in \mathbb{R}^{m_\ell \\times m_{\ell-1}}$ é a **matriz de pesos** da camada $\ell$;
+- $\mathbf{b}^{(\ell)} \in \mathbb{R}^{m_\ell}$ é o **vetor de vieses**;
+- $f^{(\ell)}$ é a **função de ativação**, aplicada elemento a elemento.
+
+Essa estrutura permite que cada camada aprenda uma transformação dos dados, extraindo representações progressivamente mais abstratas conforme os sinais avançam pela rede.
+
+
+A propagação da informação ao longo da rede ocorre de forma recursiva:
+
+1. Inicialização da entrada:
+   $$
+   \mathbf{a}^{(0)} = \mathbf{x}
+   $$
+
+2. Para cada camada $\ell = 1, 2, \dots, L$:
+   $$
+   \mathbf{z}^{(\ell)} = \mathbf{W}^{(\ell)} \mathbf{a}^{(\ell-1)} + \mathbf{b}^{(\ell)} \\
+   \mathbf{a}^{(\ell)} = f^{(\ell)}\left(\mathbf{z}^{(\ell)}\\right)
+   $$
+
+O vetor final $\hat{\mathbf{y}} = \mathbf{a}^{(L)}$ representa a saída da rede e é utilizado para realizar a tarefa desejada (como classificação ou regressão).
+
+
+Equivalente ao processo recursivo, a MLP pode ser representada como uma **função composta** (*composite function*) de operações parametrizadas:
+
+$$
+\hat{\mathbf{y}} = f^{(L)} \circ f^{(L-1)} \circ \cdots \circ f^{(1)} (\mathbf{x})
+$$
+
+ou de forma expandida:
+
+$$
+\hat{\mathbf{y}} = f^{(L)}\left( \mathbf{W}^{(L)} f^{(L-1)}\left( \cdots f^{(1)}\left( \mathbf{W}^{(1)} \mathbf{x} + \mathbf{b}^{(1)} \\right) + \cdots \\right) + \mathbf{b}^{(L)} \\right)
+$$
+
+Essa estrutura modular e hierárquica é o que permite às redes neurais aprenderem **funções altamente complexas**, ajustando seus parâmetros com base em dados de treinamento.
+
+
+O treinamento de uma MLP é realizado por meio de **aprendizado supervisionado** (*supervised learning*), com base em um conjunto de exemplos rotulados. O processo envolve:
+
+- A definição de uma **função de custo** (*loss function*) $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$, que quantifica o erro entre a saída prevista $\hat{\mathbf{y}}$ e o valor verdadeiro $\mathbf{y}$;
+- A aplicação de um **algoritmo de otimização** (como o **gradiente descendente estocástico**, ou *Stochastic Gradient Descent – SGD*) para atualizar os parâmetros da rede;
+- O uso da **retropropagação do erro** (*backpropagation*), um método eficiente para computar os gradientes de $\mathcal{L}$ em relação a todos os pesos e vieses, camada por camada, utilizando a regra da cadeia.
+
+<svg xmlns="http://www.w3.org/2000/svg" style="cursor: move;" width="1366" height="300"><g transform="translate(-334.3113555654279,-180.65504441795053) scale(1.0)"><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 98, 108); fill: none;" marker-end="" d="M513,271C612,271 612,315 711,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(73, 62, 255); fill: none;" marker-end="" d="M513,271C612,271 612,405 711,405"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(69, 58, 255); fill: none;" marker-end="" d="M513,359C612,359 612,315 711,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 141, 149); fill: none;" marker-end="" d="M513,359C612,359 612,405 711,405"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(184, 180, 255); fill: none;" marker-end="" d="M711,225C810,225 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(148, 141, 255); fill: none;" marker-end="" d="M711,315C810,315 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 85, 97); fill: none;" marker-end="" d="M711,405C810,405 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(153, 147, 255); fill: none;" marker-end="" d="M513,271C612,271 612,225 711,225"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 163, 169); fill: none;" marker-end="" d="M513,359C612,359 612,225 711,225"></path><circle r="14" class="node" id="0_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="513" cy="271"></circle><circle r="14" class="node" id="0_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="513" cy="359"></circle><circle r="14" class="node" id="1_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="225"></circle><text class="text" dy=".35em" style="font-size: 12px;" x="478" y="453">Entrada ( ℝ² )</text><text class="text" dy=".35em" style="font-size: 12px;" x="676" y="453">Oculta (ℝ³)</text><circle r="14" class="node" id="1_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="315"></circle><circle r="14" class="node" id="1_2" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="405"></circle><circle r="14" class="node" id="2_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="909" cy="315"></circle><text class="text" dy=".35em" style="font-size: 12px;" x="874" y="453">Saída (ℝ¹)</text></g><defs><marker id="arrow" viewBox="0 -5 10 10" markerWidth="7" markerHeight="7" orient="auto" refX="51.199999999999996"><path d="M0,-5L10,0L0,5" style="stroke: rgb(80, 80, 80); fill: none;"></path></marker></defs></svg>
+Em síntese, as MLPs constituem uma classe de redes neurais com estrutura em camadas densas, cada uma operando como um transformador de vetores por meio de operações matriciais. Sua arquitetura recursiva e composicional permite representar uma ampla variedade de funções e padrões, fazendo das MLPs uma base conceitual sólida e uma ferramenta prática amplamente utilizada na modelagem matemática de dados.
+        </div>'''
     }
 
 ]

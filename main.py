@@ -64,13 +64,18 @@ if st.session_state.page == "Introdução":
     st.markdown(conteudo.introducao,unsafe_allow_html=True)
 
 if st.session_state.page == "Fundamentos de ML":
-    st.markdown("## Fundamentos do Machine Learning Supervisionado", unsafe_allow_html=True)
+    st.markdown('''
+    <div align=center> 
+    
+    ## Fundamentos do Machine Learning Supervisionado
+    
+    </div> ''', unsafe_allow_html=True)
     content = conteudo.fundamentos_dct
     cols = st.columns([0.15,0.85])
     for cnt in content:
         atalho = cnt['titulo'].replace(" ", "_").lower()
-        cols[0].markdown(f"[{cnt['titulo']}](#{atalho})",unsafe_allow_html=True)
-        with cols[1].expander(cnt['titulo'], expanded=False):
+        st.sidebar.markdown(f"[{cnt['titulo']}](#{atalho})",unsafe_allow_html=True)
+        with st.expander(cnt['titulo'], expanded=False):
             st.markdown(f'''<a name={atalho}></a>''', unsafe_allow_html=True)
             st.markdown(cnt['conteudo'], unsafe_allow_html=True) #cnt.split("\n")[1:], unsafe_allow_html=True)
     
@@ -80,8 +85,8 @@ if st.session_state.page == "Redes Neurais":
     cols = st.columns([0.15,0.85])
     for cnt in content:
         atalho = cnt['titulo'].replace(" ", "_").lower()
-        cols[0].markdown(f"[{cnt['titulo']}](#{atalho})",unsafe_allow_html=True)
-        with cols[1].expander(cnt['titulo'], expanded=False):
+        st.sidebar.markdown(f"[{cnt['titulo']}](#{atalho})",unsafe_allow_html=True)
+        with st.expander(cnt['titulo'], expanded=False):
             st.markdown(f'''<a name={atalho}></a>''', unsafe_allow_html=True)
             st.markdown(cnt['conteudo'], unsafe_allow_html=True)
 
