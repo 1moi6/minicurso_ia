@@ -221,9 +221,7 @@ Finalmente, vale destacar que essas práticas se alinham aos princípios de *pla
     },
     {
         'titulo': 'Exemplo experimental',
-        'conteudo': '''<div align="justify">
-  
-  Podemos visualizar empiricamente o comportamento dos erros de generalização de um modelo de regressão supervisionada por meio de um experimento que simula diferentes níveis de complexidade indutiva. Para isso, consideramos como função alvo a ser aprendida a expressão não linear e suave:
+        'conteudo': '''<div align="justify"> Podemos visualizar empiricamente o comportamento dos erros de generalização de um modelo de regressão supervisionada por meio de um experimento que simula diferentes níveis de complexidade indutiva. Para isso, consideramos como função alvo a ser aprendida a expressão não linear e suave:
 
 $$
 f(x) = 2x + \cos(4\pi x), \quad x \in [0,1].
@@ -231,40 +229,88 @@ $$
 
 O objetivo é construir modelos aproximadores dessa função a partir de amostras com ruído e avaliar, para diferentes níveis de complexidade, os erros de viés, variância e ruído irreducível que compõem o erro quadrático médio esperado.
 
-Para aproximar $ f(x) $, usamos uma família de modelos polinomiais da forma:
+Para a aproximação de $f(x)$, empregamos uma família de modelos polinomiais da forma:
 
 $$
 f_\\alpha(x) = \sum_{k=0}^{d} a_k x^k,
 $$
 
-onde os coeficientes $ a_k $ são aprendidos a partir de dados sintéticos gerados com ruído aditivo gaussiano. A complexidade do modelo é controlada por meio de uma **regularização suave** imposta diretamente sobre os coeficientes, com o intuito de penalizar fortemente termos de alta ordem. Essa regularização é implementada por uma estrutura de decaimento exponencial, penalizando coeficientes segundo:
+onde os coeficientes $a_k$ são aprendidos a partir de dados sintéticos ruidosos. A complexidade do modelo é controlada por uma **restrição dura (hard constraint)** imposta sobre os coeficientes do polinômio, limitando sua magnitude de maneira explícita. Essa restrição assume a forma:
 
 $$
-\\text{Penalidade:} \quad \sum_{k=0}^{d} \left( \\frac{a_k}{\\alpha^k} \\right)^2,
+|a_k| \leq M \cdot \\alpha^k, \quad \\text{para } k = 0, 1, \ldots, d,
 $$
 
-onde $ \\alpha \in (0,1] $ é o **parâmetro de regularização** que controla a complexidade do modelo, e $ M $ é um hiperparâmetro multiplicativo fixo. Valores menores de $ \\alpha $ impõem maior decaimento e restrição à magnitude dos coeficientes de ordem elevada, resultando em modelos mais suaves e de baixa capacidade. Por outro lado, valores de $ \\alpha $ mais próximos de 1 permitem que o modelo expresse maior variação e detalhes locais, o que pode levar ao sobreajuste.
+em que $M$ é um hiperparâmetro fixo que define a escala global dos coeficientes, e $\\alpha \in (0,1]$ atua como um parâmetro de controle da complexidade do modelo. Coeficientes de ordem mais alta são assim restringidos mais severamente quando $\\alpha$ é pequeno, forçando o modelo a ser mais suave e menos propenso ao sobreajuste. Por outro lado, à medida que $\\alpha$ se aproxima de 1, os coeficientes de ordens superiores podem assumir maiores magnitudes, permitindo maior expressividade e complexidade no ajuste.
 
-A cada iteração do experimento, geramos um conjunto de dados de treinamento $ \{(x_i, y_i)\}_{i=1}^n $, com $ x_i \sim \mathcal{U}(0,1) $ e $ y_i = f(x_i) + \\varepsilon_i $, onde $ \\varepsilon_i \sim \mathcal{N}(0, \sigma^2) $. O modelo $ f_\\alpha $ é então ajustado minimizando a seguinte função de perda regularizada:
+A cada iteração do experimento, geramos um conjunto de dados de treinamento $\{(x_i, y_i)\}_{i=1}^n$, com $x_i \sim \mathcal{U}(0,1)$ e $y_i = f(x_i) + \\varepsilon_i$, onde $\\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$ representa o ruído aditivo. O modelo $f_\\alpha(x)$ é então ajustado por meio da minimização da função de perda quadrática empírica:
 
 $$
-\min_{a_0,\ldots,a_d} \left\{ \\frac{1}{n} \sum_{i=1}^{n} \left(y_i - \sum_{k=0}^{d} a_k x_i^k \\right)^2 + \lambda \sum_{k=0}^{d} \left( \\frac{a_k}{\\alpha^k} \\right)^2 \\right\},
+\min_{a_0, \ldots, a_d} \left\{ \\frac{1}{n} \sum_{i=1}^{n} \left(y_i - \sum_{k=0}^{d} a_k x_i^k \\right)^2 \\right\},
 $$
 
-onde $ \lambda $ é um parâmetro que controla a força da penalização. Essa minimização é realizada para diferentes valores de $ \\alpha $, mantendo fixos o número de amostras, a variância do ruído, e o grau máximo do polinômio. Para cada $ \\alpha $, o experimento é repetido sobre diversos conjuntos de dados distintos, e as predições do modelo são avaliadas em um conjunto fixo de pontos $ \{x^{(j)}\}_{j=1}^{m} $ não vistos no treinamento. A partir dessas predições, calcula-se o viés quadrático como a média do quadrado da diferença entre a predição média e o valor verdadeiro de $ f(x) $, a variância como a variância empírica das predições ao longo dos datasets, e o ruído como a variância do erro aditivo conhecido.
+sujeita às restrições:
 
-A variação do parâmetro $ \\alpha $ permite então observar como a capacidade do modelo influencia o erro de generalização. Espera-se que, para valores muito pequenos de $ \\alpha $, o modelo tenha baixa variância, mas alto viés, devido à incapacidade de capturar adequadamente a oscilação da função alvo — caracterizando um regime de underfitting. À medida que $ \\alpha $ cresce, o viés tende a diminuir, mas a variância pode aumentar sensivelmente, indicando sobreajuste ao ruído dos dados. O valor ótimo de $ \\alpha $ é aquele que minimiza a soma total dos erros, equilibrando a capacidade de generalização com a fidelidade à função verdadeira.
+$$
+|a_k| \leq M \cdot \\alpha^k, \quad \\forall k.
+$$
+
+Essa formulação caracteriza uma regularização implícita via restrições no espaço de hipóteses, em contraste com métodos de regularização penalizada. Não há penalidade explícita adicionada à função de perda — o controle da complexidade ocorre diretamente por meio do domínio admissível dos coeficientes.
+
+Para cada valor de $\\alpha$, o experimento é repetido sobre diversos conjuntos de dados independentes, e o modelo ajustado é avaliado sobre um conjunto fixo de pontos de teste $\{x^{(j)}\}_{j=1}^{m}$ não utilizados no treinamento. A partir das predições dos diferentes modelos em cada ponto, calculam-se o viés quadrático, como o quadrado da diferença entre a média das predições e o valor verdadeiro de $f(x)$, a variância empírica das predições, e o erro irredutível, correspondente à variância do ruído aditivo previamente definido.
+
+À medida que variamos o parâmetro $\\alpha$, é possível observar como a capacidade expressiva do modelo influencia a decomposição do erro. Para $\\alpha$ muito pequeno, as restrições são rígidas mesmo nos coeficientes de baixa ordem, resultando em modelos com baixo grau de flexibilidade e, portanto, alto viés. Já para $\\alpha$ próximo de 1, os modelos são menos restritos e podem se ajustar demais às particularidades dos dados ruidosos, levando a alta variância. O ponto ideal ocorre quando há um equilíbrio entre essas duas fontes de erro, minimizando o erro total de generalização.
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/erro_decomposicao_experimental.png" width="400"/>
+<img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/decomposicao_erro_experimental.png" width="500"/>
 </p>
 
+Este experimento fornece uma interpretação geométrica e estatística clara do papel dos hiperparâmetros e das **restrições explícitas** na regulação da complexidade de modelos polinomiais. Ele ilustra como o viés e a variância podem ser modulados ao se restringir diretamente o espaço de busca dos parâmetros, oferecendo assim uma perspectiva sobre as estratégias de regularização em aprendizado supervisionado.
+        </div> '''
+#         '''<div align="justify">
+  
+#   Podemos visualizar empiricamente o comportamento dos erros de generalização de um modelo de regressão supervisionada por meio de um experimento que simula diferentes níveis de complexidade indutiva. Para isso, consideramos como função alvo a ser aprendida a expressão não linear e suave:
 
-Esse experimento ilustra de maneira clara o papel dos hiperparâmetros na regulação da complexidade de modelos de aprendizado e fornece uma ferramenta empírica útil para compreender a compensação entre viés e variância, que está no cerne da teoria estatística do aprendizado de máquina.
+# $$
+# f(x) = 2x + \cos(4\pi x), \quad x \in [0,1].
+# $$
+
+# O objetivo é construir modelos aproximadores dessa função a partir de amostras com ruído e avaliar, para diferentes níveis de complexidade, os erros de viés, variância e ruído irreducível que compõem o erro quadrático médio esperado.
+
+# Para aproximar $ f(x) $, usamos uma família de modelos polinomiais da forma:
+
+# $$
+# f_\\alpha(x) = \sum_{k=0}^{d} a_k x^k,
+# $$
+
+# onde os coeficientes $ a_k $ são aprendidos a partir de dados sintéticos gerados com ruído aditivo gaussiano. A complexidade do modelo é controlada por meio de uma **regularização suave** imposta diretamente sobre os coeficientes, com o intuito de penalizar fortemente termos de alta ordem. Essa regularização é implementada por uma estrutura de decaimento exponencial, penalizando coeficientes segundo:
+
+# $$
+# \\text{Penalidade:} \quad \sum_{k=0}^{d} \left( \\frac{a_k}{\\alpha^k} \\right)^2,
+# $$
+
+# onde $ \\alpha \in (0,1] $ é o **parâmetro de regularização** que controla a complexidade do modelo, e $ M $ é um hiperparâmetro multiplicativo fixo. Valores menores de $ \\alpha $ impõem maior decaimento e restrição à magnitude dos coeficientes de ordem elevada, resultando em modelos mais suaves e de baixa capacidade. Por outro lado, valores de $ \\alpha $ mais próximos de 1 permitem que o modelo expresse maior variação e detalhes locais, o que pode levar ao sobreajuste.
+
+# A cada iteração do experimento, geramos um conjunto de dados de treinamento $ \{(x_i, y_i)\}_{i=1}^n $, com $ x_i \sim \mathcal{U}(0,1) $ e $ y_i = f(x_i) + \\varepsilon_i $, onde $ \\varepsilon_i \sim \mathcal{N}(0, \sigma^2) $. O modelo $ f_\\alpha $ é então ajustado minimizando a seguinte função de perda regularizada:
+
+# $$
+# \min_{a_0,\ldots,a_d} \left\{ \\frac{1}{n} \sum_{i=1}^{n} \left(y_i - \sum_{k=0}^{d} a_k x_i^k \\right)^2 + \lambda \sum_{k=0}^{d} \left( \\frac{a_k}{\\alpha^k} \\right)^2 \\right\},
+# $$
+
+# onde $ \lambda $ é um parâmetro que controla a força da penalização. Essa minimização é realizada para diferentes valores de $ \\alpha $, mantendo fixos o número de amostras, a variância do ruído, e o grau máximo do polinômio. Para cada $ \\alpha $, o experimento é repetido sobre diversos conjuntos de dados distintos, e as predições do modelo são avaliadas em um conjunto fixo de pontos $ \{x^{(j)}\}_{j=1}^{m} $ não vistos no treinamento. A partir dessas predições, calcula-se o viés quadrático como a média do quadrado da diferença entre a predição média e o valor verdadeiro de $ f(x) $, a variância como a variância empírica das predições ao longo dos datasets, e o ruído como a variância do erro aditivo conhecido.
+
+# A variação do parâmetro $ \\alpha $ permite então observar como a capacidade do modelo influencia o erro de generalização. Espera-se que, para valores muito pequenos de $ \\alpha $, o modelo tenha baixa variância, mas alto viés, devido à incapacidade de capturar adequadamente a oscilação da função alvo — caracterizando um regime de underfitting. À medida que $ \\alpha $ cresce, o viés tende a diminuir, mas a variância pode aumentar sensivelmente, indicando sobreajuste ao ruído dos dados. O valor ótimo de $ \\alpha $ é aquele que minimiza a soma total dos erros, equilibrando a capacidade de generalização com a fidelidade à função verdadeira.
+
+# <p align="center">
+# <img src="https://raw.githubusercontent.com/1moi6/minicurso_ia/refs/heads/main/assets/images/decomposicao_erro_experimental.png" width="500"/>
+# </p>
 
 
-  </div>
-  '''
+# Esse experimento ilustra de maneira clara o papel dos hiperparâmetros na regulação da complexidade de modelos de aprendizado e fornece uma ferramenta empírica útil para compreender a compensação entre viés e variância, que está no cerne da teoria estatística do aprendizado de máquina.
+
+
+#   </div>
+#   '''
 
     },
     {'titulo': "Métricas de Avaliação", 'conteudo': '''<div align="justify">
@@ -1296,7 +1342,7 @@ Combinadas com transformações lineares, essas funções de ativação compõem
         'titulo': 'Camadas Densas',
         'conteudo': '''<div align="justify">
 
-As **Redes Neurais Feedforward Densas** (em inglês, *Dense Feedforward Neural Networks*), também conhecidas como **Perceptrons Multicamadas** (*Multilayer Perceptrons*, ou MLPs), constituem uma das arquiteturas mais fundamentais do aprendizado profundo. Essas redes realizam transformações sucessivas sobre os dados por meio de camadas de neurônios interconectados, nas quais a informação flui em **uma única direção** — da entrada à saída — sem ciclos ou realimentações.
+As **Redes Neurais Multicamadas** (em inglês, *Dense Feedforward Neural Networks*), também conhecidas como **Perceptrons Multicamadas** (*Multilayer Perceptrons*, ou MLPs), constituem uma das arquiteturas mais fundamentais do aprendizado profundo. Essas redes realizam transformações sucessivas sobre os dados por meio de camadas de neurônios interconectados, nas quais a informação flui em **uma única direção** — da entrada à saída — sem ciclos ou realimentações.
 
 A estrutura básica de uma MLP é composta por três blocos principais:
 
@@ -1305,7 +1351,7 @@ A estrutura básica de uma MLP é composta por três blocos principais:
 - Uma **camada de saída** (*output layer*), que fornece a predição final da rede.
 
 
-Cada **camada** da rede pode ser interpretada como um **bloco funcional** que transforma um vetor de entrada $\mathbf{a}^{(\ell-1)} \in \mathbb{R}^{m_{\ell-1}}$ em um vetor de saída $\mathbf{a}^{(\ell)} \in \mathbb{R}^{m_\ell}$, por meio de uma transformação afim seguida de uma ativação não linear:
+Cada **camada** da rede pode ser interpretada como um **bloco funcional** que transforma um vetor de entrada $\mathbf{a}^{(\ell-1)} \in \mathbb{R}^{m_{\ell-1}}$ em um vetor de saída $\mathbf{a}^{(\ell)} \in \mathbb{R}^{m_\ell}$, por meio de uma transformação afim seguida de uma função ativação:
 
 $$
 \mathbf{z}^{(\ell)} = \mathbf{W}^{(\ell)} \mathbf{a}^{(\ell-1)} + \mathbf{b}^{(\ell)} \\
@@ -1321,7 +1367,7 @@ onde:
 Essa estrutura permite que cada camada aprenda uma transformação dos dados, extraindo representações progressivamente mais abstratas conforme os sinais avançam pela rede.
 
 
-A propagação da informação ao longo da rede ocorre de forma recursiva:
+A propagação da informação ao longo da de camadas sucessivas rede ocorre de forma recursiva:
 
 1. Inicialização da entrada:
    $$
@@ -1343,24 +1389,548 @@ $$
 \hat{\mathbf{y}} = f^{(L)} \circ f^{(L-1)} \circ \cdots \circ f^{(1)} (\mathbf{x})
 $$
 
-ou de forma expandida:
-
-$$
-\hat{\mathbf{y}} = f^{(L)}\left( \mathbf{W}^{(L)} f^{(L-1)}\left( \cdots f^{(1)}\left( \mathbf{W}^{(1)} \mathbf{x} + \mathbf{b}^{(1)} \\right) + \cdots \\right) + \mathbf{b}^{(L)} \\right)
-$$
-
-Essa estrutura modular e hierárquica é o que permite às redes neurais aprenderem **funções altamente complexas**, ajustando seus parâmetros com base em dados de treinamento.
+Essa estrutura modular e hierárquica é o que permite às redes neurais aprenderem **funções complexas**, ajustando seus parâmetros com base em dados de treinamento.
 
 
-O treinamento de uma MLP é realizado por meio de **aprendizado supervisionado** (*supervised learning*), com base em um conjunto de exemplos rotulados. O processo envolve:
+Como mencionado no capítulo anterior, o treinamento de uma MLP é realizado por meio de um processo de **aprendizado supervisionado**, com base em um conjunto de exemplos rotulados. O processo envolve:
 
-- A definição de uma **função de custo** (*loss function*) $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$, que quantifica o erro entre a saída prevista $\hat{\mathbf{y}}$ e o valor verdadeiro $\mathbf{y}$;
+- A definição de uma **função de custo** $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$, que quantifica o erro entre a saída prevista $\hat{\mathbf{y}}$ e o valor verdadeiro $\mathbf{y}$;
 - A aplicação de um **algoritmo de otimização** (como o **gradiente descendente estocástico**, ou *Stochastic Gradient Descent – SGD*) para atualizar os parâmetros da rede;
 - O uso da **retropropagação do erro** (*backpropagation*), um método eficiente para computar os gradientes de $\mathcal{L}$ em relação a todos os pesos e vieses, camada por camada, utilizando a regra da cadeia.
 
 <svg xmlns="http://www.w3.org/2000/svg" style="cursor: move;" width="1366" height="300"><g transform="translate(-334.3113555654279,-180.65504441795053) scale(1.0)"><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 98, 108); fill: none;" marker-end="" d="M513,271C612,271 612,315 711,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(73, 62, 255); fill: none;" marker-end="" d="M513,271C612,271 612,405 711,405"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(69, 58, 255); fill: none;" marker-end="" d="M513,359C612,359 612,315 711,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 141, 149); fill: none;" marker-end="" d="M513,359C612,359 612,405 711,405"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(184, 180, 255); fill: none;" marker-end="" d="M711,225C810,225 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(148, 141, 255); fill: none;" marker-end="" d="M711,315C810,315 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 85, 97); fill: none;" marker-end="" d="M711,405C810,405 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(153, 147, 255); fill: none;" marker-end="" d="M513,271C612,271 612,225 711,225"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 163, 169); fill: none;" marker-end="" d="M513,359C612,359 612,225 711,225"></path><circle r="14" class="node" id="0_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="513" cy="271"></circle><circle r="14" class="node" id="0_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="513" cy="359"></circle><circle r="14" class="node" id="1_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="225"></circle><text class="text" dy=".35em" style="font-size: 12px;" x="478" y="453">Entrada ( ℝ² )</text><text class="text" dy=".35em" style="font-size: 12px;" x="676" y="453">Oculta (ℝ³)</text><circle r="14" class="node" id="1_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="315"></circle><circle r="14" class="node" id="1_2" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="405"></circle><circle r="14" class="node" id="2_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="909" cy="315"></circle><text class="text" dy=".35em" style="font-size: 12px;" x="874" y="453">Saída (ℝ¹)</text></g><defs><marker id="arrow" viewBox="0 -5 10 10" markerWidth="7" markerHeight="7" orient="auto" refX="51.199999999999996"><path d="M0,-5L10,0L0,5" style="stroke: rgb(80, 80, 80); fill: none;"></path></marker></defs></svg>
-Em síntese, as MLPs constituem uma classe de redes neurais com estrutura em camadas densas, cada uma operando como um transformador de vetores por meio de operações matriciais. Sua arquitetura recursiva e composicional permite representar uma ampla variedade de funções e padrões, fazendo das MLPs uma base conceitual sólida e uma ferramenta prática amplamente utilizada na modelagem matemática de dados.
+Em síntese, as redes neurais densas de múltiplas camadas constituem uma classe de redes neurais que agem como um transformação de vetores por meio de operações matriciais e aplicações de funções de ativação. Sua arquitetura recursiva e composicional permite representar uma ampla variedade de funções e padrões, fazendo de tais redes uma base conceitual sólida e uma ferramenta prática amplamente utilizada na modelagem matemática de dados.
+
+A seguir, apresentamos com mais detalhes cada um desses componentes fundamentais.       
         </div>'''
-    }
+    },
+  {
+    'titulo': 'Treinamento Em Redes de Regressão',
+    'conteudo': '''<div align="justify">
+
+Seja uma rede neural com saída escalar utilizada em uma tarefa de **regressão**, cuja última camada contém um único neurônio. Para facilitar a compreensão dos cálculos, consideramos apenas **uma amostra** do conjunto de dados e nesse caso, a **função de perda quadrática** é definida como:
+
+$$
+\mathcal{L} = \\frac{1}{2} \left( a^{[L]} - y \\right)^2
+$$
+
+---
+
+###### Cálculo dos Gradientes Para a Última Camada
+
+A última camada recebe como entrada as ativações da camada anterior, representadas por um vetor 
+$$
+\mathbf{a}^{[L-1]} = (a_1^{[L-1]}, a_2^{[L-1]}, \dots, a_{n_{L-1}}^{[L-1]}) \in \mathbb{R}^{n_{L-1}}
+$$
+
+1. Os **pesos** da camada são:
+
+$$
+\mathbf{w}^{[L]} = (w_1^{[L]}, w_2^{[L]}, \dots, w_{n_{L-1}}^{[L]})
+$$
+
+2. O **viés** é: 
+
+$$
+b^{[L]} \in \mathbb{R}
+$$
+
+3. A **pré-ativação** é:  
+  $$
+  z^{[L]} = \sum_{j=1}^{n_{L-1}} w_j^{[L]} a_j^{[L-1]} + b^{[L]}
+  $$
+4. A **saída**, ou ativação da camada de saída, é:
+  $$
+  a^{[L]} = f^{[L]}(z^{[L]})
+  $$
+
+
+Nosso objetivo é calcular as derivadas:
+
+$$
+\dfrac{\partial \mathcal{L}}{\partial w_j^{[L]}}, \quad
+\dfrac{\partial \mathcal{L}}{\partial b^{[L]}}
+$$
+
+Para isso, por meio da **regra da cadeia**, a derivada da perda em relação a um peso específico $w_j^{[L]}$ é:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial w_j^{[L]}} = 
+\\frac{\partial \mathcal{L}}{\partial a^{[L]}} \cdot 
+\\frac{d a^{[L]}}{d z^{[L]}} \cdot 
+\\frac{\partial z^{[L]}}{\partial w_j^{[L]}}
+$$
+
+Agora, calculando cada fator, temos:
+ 
+   $$
+   \\frac{\partial \mathcal{L}}{\partial a^{[L]}} = a^{[L]} - y, \quad
+   \\frac{d a^{[L]}}{d z^{[L]}} = f'^{[L]}(z^{[L]}), \quad
+   \\frac{\partial z^{[L]}}{\partial w_j^{[L]}} = a_j^{[L-1]}
+   $$
+
+e, portanto,
+
+$$
+\\frac{\partial \mathcal{L}}{\partial w_j^{[L]}} = 
+(a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \cdot a_j^{[L-1]}
+$$
+
+
+De forma análoga, a derivada da perda em relação ao viés $b^{[L]}$ também é obtida pela regra da cadeia:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial b^{[L]}} =
+\\frac{\partial \mathcal{L}}{\partial a^{[L]}} \cdot 
+\\frac{d a^{[L]}}{d z^{[L]}} \cdot 
+\\frac{\partial z^{[L]}}{\partial b^{[L]}}
+$$
+
+Sabemos que:
+
+$$ 
+\dfrac{\partial \mathcal{L}}{\partial a^{[L]}} = a^{[L]} - y,\quad\dfrac{d a^{[L]}}{d z^{[L]}} = f'^{[L]}(z^{[L]}),\quad\dfrac{\partial z^{[L]}}{\partial b^{[L]}} = 1 
+$$
+
+Logo:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial b^{[L]}} = (a^{[L]} - y) \cdot f'^{[L]}(z^{[L]})
+$$
+
+Por fim, podemos reescrever o cálculo do gradiente em **forma vetorial**, para obter o gradiente completo em relação à matriz de pesos $ \mathbf{W}^{[L]} \in \mathbb{R}^{1 \\times n_{L-1}} $.
+Para isso, consideramos o vetor de **deltas** da camada de saída:
+
+$$ 
+\delta^{[L]} := (a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \in \mathbb{R}, \quad 
+\mathbf{a}^{[L-1]} \in \mathbb{R}^{n_{L-1}} 
+$$
+
+Assim, a derivada da perda em relação à matriz de pesos da última camada é:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[L]}} = \delta^{[L]} \cdot \left( \mathbf{a}^{[L-1]} \\right)^\\top
+$$
+
+cujo resultado é um vetor linha de dimensão $ 1 \\times n_{L-1} $, igual à forma de $ \mathbf{W}^{[L]} $.
+
+Analogamente, o gradiente da função de perda em relação ao viés da camada de saída é:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial b^{[L]}} = \delta^{[L]}
+$$
+
+---
+
+###### Camadas Intermediárias
+
+Nosso objetivo é calcular:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial w_{ij}^{[L-1]}}
+$$
+
+Lembrando que a rede é composta por uma sequência de transformações, aplicamos a **regra da cadeia** para decompor essa derivada em três fatores:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial w_{ij}^{[L-1]}} = 
+\\frac{\partial \mathcal{L}}{\partial a^{[L]}} \cdot 
+\\frac{\partial a^{[L]}}{\partial z^{[L]}} \cdot 
+\\frac{\partial z^{[L]}}{\partial a_i^{[L-1]}} \cdot 
+\\frac{\partial a_i^{[L-1]}}{\partial z_i^{[L-1]}} \cdot 
+\\frac{\partial z_i^{[L-1]}}{\partial w_{ij}^{[L-1]}}
+$$
+
+Observando que:
+
+1. Erro da predição, como anteriormente definido:
+   $$
+   \\frac{\partial \mathcal{L}}{\partial a^{[L]}} = a^{[L]} - y
+   $$
+
+2. Derivada da função de ativação da saída:
+   $$
+   \\frac{\partial a^{[L]}}{\partial z^{[L]}} = f'^{[L]}(z^{[L]})
+   $$
+
+3. Derivada da pré-ativação da saída em relação à ativação da camada $ L-1 $:
+   $$
+   \\frac{\partial z^{[L]}}{\partial a_i^{[L-1]}} = w_i^{[L]}
+   $$
+
+4. Derivada da ativação da camada $ L-1$:
+   $$
+   \\frac{\partial a_i^{[L-1]}}{\partial z_i^{[L-1]}} = f'^{[L-1]}(z_i^{[L-1]})
+   $$
+
+5. Derivada da pré-ativação $ z_i^{[L-1]}$ com respeito ao peso $w_{ij}^{[L-1]}$:
+
+   $$
+   \\frac{\partial z_i^{[L-1]}}{\partial w_{ij}^{[L-1]}} = a_j^{[L-2]}
+   $$
+
+obtemos:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial w_{ij}^{[L-1]}} =
+(a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \cdot w_i^{[L]} \cdot f'^{[L-1]}(z_i^{[L-1]}) \cdot a_j^{[L-2]}
+$$
+
+Essa expressão mostra que:
+
+- O **gradiente local** $ \\frac{\partial \mathcal{L}}{\partial w_{ij}^{[L-1]}} $ é proporcional ao erro da predição,
+- É modulado pelo **produto das derivadas das ativações**,
+- E pelo caminho específico percorrido da entrada $ a_j^{[L-2]} $ até a saída $ a^{[L]} $, passando por $ w_{ij}^{[L-1]} $ e $ w_i^{[L]} $.
+
+Para simplificar a notação, definimos o vetor de **deltas** da camada $ L-1 $ como:
+- $ \delta^{[L]} := (a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \in \mathbb{R} $
+- $ \\boldsymbol{\delta}^{[L-1]} := \delta^{[L]} \cdot \left( \mathbf{w}^{[L]} \odot f'^{[L-1]}(\mathbf{z}^{[L-1]}) \\right) \in \mathbb{R}^{n_{L-1}} $
+- $ \mathbf{a}^{[L-2]} \in \mathbb{R}^{n_{L-2}} $
+
+$$
+\\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[L-1]}} = \\boldsymbol{\delta}^{[L-1]} \cdot \left( \mathbf{a}^{[L-2]} \\right)^\\top
+$$
+
+Essa expressão é o produto externo entre o vetor de erros propagados e o vetor de ativações da camada anterior.
+
+
+
+---
+
+###### Generalização para Múltiplas Amostras
+
+Os resultados acima se referem ao cálculo dos gradientes **para uma única amostra**. Para generalizar para um conjunto de dados com $m$ amostras, basta calcular essas expressões para cada amostra individual e, em seguida, **tomar a média** dos resultados:
+
+1. Derivada da função de perda em relação ao peso $w_j^{[L]}$ para $m$ amostras:  
+  $$
+  \\frac{\partial \mathcal{L}}{\partial w_j^{[L]}} = 
+  \\frac{1}{m} \sum_{i=1}^m (a^{[L](i)} - y^{(i)}) \cdot f'^{[L]}(z^{[L](i)}) \cdot a_j^{[L-1](i)}
+  $$
+
+2. Derivada da função de perda em relação ao viés $b^{[L]}$ para $m$ amostras:  
+  $$
+  \\frac{\partial \mathcal{L}}{\partial b^{[L]}} = 
+  \\frac{1}{m} \sum_{i=1}^m (a^{[L](i)} - y^{(i)}) \cdot f'^{[L]}(z^{[L](i)})
+  $$
+
+Essas formulas são essenciais para o treinamento eficiente de redes neurais com múltiplos exemplos simultaneamente (batch learning).
+
+Por fim, considerando:
+
+1. a matriz cujas colunas são as ativações da última camada oculta para cada uma das $m$ amostras: 
+
+$$
+\mathbf{A}^{[L-1]} \in \mathbb{R}^{n_{L-1} \\times m}
+$$ 
+
+2. O vetor de pré-ativações da camada de saída:
+
+$$
+\mathbf{Z}^{[L]} = \mathbf{w}^{[L] \\top} \mathbf{A}^{[L-1]} + b^{[L]}
+$$ 
+
+3. o vetor das predições da rede: 
+
+$$
+\mathbf{A}^{[L]} = f^{[L]}(\mathbf{Z}^{[L]})
+$$
+
+4. o vetor com os valores reais esperados: 
+
+$$
+\mathbf{Y} \in \mathbb{R}^{1 \\times m}
+$$ 
+
+5. A função de perda média: 
+
+$$
+\mathcal{L} = \dfrac{1}{2m} \sum_{i=1}^m \left(a^{[L](i)} - y^{(i)}\\right)^2
+$$ 
+
+a derivada da função de perda média em relação ao vetor de pesos da última camada $\mathbf{w}^{[L]} \in \mathbb{R}^{n_{L-1}}$ é:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial \mathbf{w}^{[L]}} = \\frac{1}{m} \cdot \mathbf{A}^{[L-1]} \cdot \left[ \left( \mathbf{A}^{[L]} - \mathbf{Y} \\right) \odot f'^{[L]}(\mathbf{Z}^{[L]}) \\right]^\\top
+$$
+enquanto que a derivada da função de perda média em relação ao viés escalar $b^{[L]}$ é:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial b^{[L]}} = \\frac{1}{m} \cdot \mathbf{1}^\\top \cdot \left[ \left( \mathbf{A}^{[L]} - \mathbf{Y} \\right) \odot f'^{[L]}(\mathbf{Z}^{[L]}) \\right]
+$$
+
+em que $\mathbf{1} \in \mathbb{R}^{m \\times 1}$ é um vetor coluna de uns.
+
+Essas expressões vetoriais são altamente eficientes e podem ser implementadas diretamente em frameworks de aprendizado profundo. Elas são a base para o cálculo de gradientes na **fase de retropropagação** (backpropagation) durante o treinamento.
+
+</div> '''
+  },
+  {
+    'titulo': 'Treinamento de Redes Neurais',
+    'conteudo': '''<div align="justify">
+    
+O processo de **treinamento** de uma Rede Neural Artificial (RNA) consiste na **ajuste iterativo dos pesos sinápticos** de modo a minimizar uma função de perda que quantifica o erro entre a saída prevista e a saída desejada.
+
+Seja uma rede com parâmetros $\\theta$ (conjunto de pesos e vieses), a função de perda global é representada por:
+
+$$
+\mathcal{L}(\\theta) = \\frac{1}{n} \sum_{i=1}^n \ell(\hat{y}^{(i)}, y^{(i)})
+$$
+
+onde:
+
+- $n$ é o número de amostras de treinamento,
+- $y^{(i)}$ é a saída esperada,
+- $\hat{y}^{(i)}$ é a saída da rede para a entrada $\mathbf{x}^{(i)}$,
+- $\ell$ é a função de perda (como MSE ou entropia cruzada).
+
+### Algoritmo de Retropropagação (Backpropagation)
+
+O **algoritmo de retropropagação** é um método eficiente de **cálculo do gradiente** da função de perda com respeito a cada peso da rede, utilizando a **regra da cadeia** do cálculo diferencial.
+
+#### Etapas do Algoritmo
+
+1. **Propagação direta (Forward pass):**
+
+   Calcula-se a saída da rede para uma dada entrada $\mathbf{x}^{(i)}$, armazenando os valores intermediários de ativações e pré-ativações em cada camada.
+
+2. **Cálculo do erro na saída:**
+
+   Para a última camada (camada de saída), o erro local é dado por:
+
+   $$
+   \delta^{[L]} = \\nabla_{\hat{y}} \ell(\hat{y}, y) \odot f'^{[L]}(z^{[L]})
+   $$
+
+   onde:
+
+   - $f'^{[L]}$ é a derivada da função de ativação da camada de saída,
+   - $z^{[L]}$ é a entrada linear (pré-ativação) da última camada,
+   - $\odot$ denota o produto de Hadamard (elemento a elemento).
+
+3. **Propagação do erro para camadas anteriores:**
+
+   Para cada camada $l = L-1, ..., 1$, o erro é retropropagado pela fórmula:
+
+   $$
+   \delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \odot f'^{[l]}(z^{[l]})
+   $$
+
+4. **Cálculo dos gradientes:**
+
+   Os gradientes da perda em relação aos pesos e vieses são obtidos por:
+
+   $$
+   \\frac{\partial \mathcal{L}}{\partial W^{[l]}} = \delta^{[l]} (a^{[l-1]})^T, \\
+   \\frac{\partial \mathcal{L}}{\partial b^{[l]}} = \delta^{[l]}
+   $$
+
+5. **Atualização dos parâmetros (Gradiente Descendente):**
+
+   Com uma taxa de aprendizado $\eta > 0$, os pesos são atualizados conforme:
+
+   $$
+   W^{[l]} \leftarrow W^{[l]} - \eta \\frac{\partial \mathcal{L}}{\partial W^{[l]}}, \\
+   b^{[l]} \leftarrow b^{[l]} - \eta \\frac{\partial \mathcal{L}}{\partial b^{[l]}}
+   $$
+
+---
+
+### Considerações Finais
+
+O **algoritmo de retropropagação** é a base do treinamento supervisionado em redes neurais profundas. Ele permite que a informação de erro flua da saída até as primeiras camadas, ajustando os pesos para melhorar gradualmente a performance da rede no conjunto de treinamento.
+
+A compreensão da derivação matemática e do funcionamento recursivo da retropropagação é essencial para o domínio teórico e prático do treinamento de RNAs.
+
+---
+### Cálculo das Derivadas na Camada de Saída: Aplicando a Regra da Cadeia
+
+O treinamento de uma rede neural baseia-se na minimização de uma função de perda, e isso requer o cálculo de derivadas parciais da perda em relação aos parâmetros da rede. Um dos passos fundamentais nesse processo é o cálculo da derivada da função de perda em relação à **entrada linear** da camada de saída — isto é, os valores antes da aplicação da função de ativação.
+
+Nesta seção, explicamos esse procedimento com base na **regra da cadeia**, de forma rigorosa e acessível.
+
+---
+
+#### Notação e Estrutura
+
+Considere a última camada de uma rede neural (denotada por índice $L$):
+
+- A entrada da rede é $\mathbf{x}$;
+- A saída da penúltima camada (ou última camada oculta) é o vetor $\mathbf{a}^{[L-1]}$;
+- Os pesos da camada de saída são $W^{[L]}$ e os vieses são $b^{[L]}$;
+- A entrada linear (pré-ativação) da camada de saída é:
+  
+  $$
+  \mathbf{z}^{[L]} = W^{[L]} \mathbf{a}^{[L-1]} + b^{[L]}
+  $$
+
+- A função de ativação $f^{[L]}$ é aplicada elemento a elemento sobre $\mathbf{z}^{[L]}$, produzindo a saída da rede:
+
+  $$
+  \mathbf{a}^{[L]} = f^{[L]}(\mathbf{z}^{[L]})
+  $$
+
+- A função de perda (loss function), denotada por $\mathcal{L}$, compara $\mathbf{a}^{[L]}$ com o valor alvo $\mathbf{y}$.
+
+---
+
+#### Aplicando a Regra da Cadeia
+
+Nosso objetivo é calcular:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{[L]}}
+$$
+
+Ou seja, como pequenas variações na entrada linear da última camada ($\mathbf{z}^{[L]}$) afetam o valor da perda.
+
+Para isso, usamos a **regra da cadeia**, considerando que:
+
+- $\mathcal{L}$ depende de $\mathbf{z}^{[L]}$ apenas indiretamente, por meio de $\mathbf{a}^{[L]}$,
+- $\mathbf{a}^{[L]} = f^{[L]}(\mathbf{z}^{[L]})$.
+
+Logo, temos:
+
+$$
+\\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{[L]}} = \\frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot \\frac{\partial \mathbf{a}^{[L]}}{\partial \mathbf{z}^{[L]}} = \\frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot f'^{[L]}(\mathbf{z}^{[L]})
+$$
+
+Este é o ponto central: a derivada da perda em relação à entrada linear $\mathbf{z}^{[L]}$ é o **produto de Hadamard** (produto componente a componente) entre dois vetores:
+
+- o vetor do gradiente da perda em relação à saída da rede ($\partial \mathcal{L} / \partial \mathbf{a}^{[L]}$),
+- e o vetor derivada da função de ativação avaliada em $\mathbf{z}^{[L]}$.
+
+---
+
+#### Interpretação
+
+Cada componente da derivada $\partial \mathcal{L} / \partial z^{[L]}_i$ depende apenas do correspondente $a^{[L]}_i$ e $z^{[L]}_i$. Isso ocorre porque a ativação $f^{[L]}$ é aplicada **individualmente a cada neurônio** da camada de saída. Essa independência entre neurônios justifica o uso do **produto de Hadamard**.
+
+
+### Derivadas na Camada de Saída: Um Caminho Componente a Componente
+
+Para entender de forma rigorosa o cálculo da derivada da função de perda em relação à entrada linear da **camada de saída**, começamos examinando o problema componente a componente, antes de generalizar a notação para vetores.
+
+Considere uma rede neural com camada de saída indexada por $L$, e saída vetorial $\mathbf{a}^{[L]} \in \mathbb{R}^{n_L}$. A entrada linear (pré-ativação) de cada neurônio da saída é:
+
+$$
+z^{[L]}_i = \sum_{j=1}^{n_{L-1}} w^{[L]}_{ij} a^{[L-1]}_j + b^{[L]}_i
+$$
+
+Após a aplicação da função de ativação $f^{[L]}$ (aplicada ponto a ponto), temos:
+
+$$
+a^{[L]}_i = f^{[L]}(z^{[L]}_i)
+$$
+
+A função de perda $\mathcal{L}$ depende da predição da rede, isto é, de todos os $a^{[L]}_i$. Nosso objetivo é calcular:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z^{[L]}_i}
+$$
+
+---
+
+#### Passo 1: Regra da Cadeia (componente por componente)
+
+Aplicando a **regra da cadeia** à função composta $\mathcal{L}(a^{[L]}_i(z^{[L]}_i))$, temos:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z^{[L]}_i} = \frac{\partial \mathcal{L}}{\partial a^{[L]}_i} \cdot \frac{\partial a^{[L]}_i}{\partial z^{[L]}_i}
+$$
+
+A primeira derivada, $\frac{\partial \mathcal{L}}{\partial a^{[L]}_i}$, depende da forma da função de perda utilizada (por exemplo, erro quadrático ou entropia cruzada).
+
+A segunda derivada é dada pela derivada da função de ativação:
+
+$$
+\frac{\partial a^{[L]}_i}{\partial z^{[L]}_i} = f'^{[L]}(z^{[L]}_i)
+$$
+
+Portanto:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z^{[L]}_i} = \frac{\partial \mathcal{L}}{\partial a^{[L]}_i} \cdot f'^{[L]}(z^{[L]}_i)
+$$
+
+---
+
+#### Passo 2: Generalização Vetorial
+
+O resultado acima vale para cada neurônio $i = 1, \dots, n_L$. Podemos agora reunir todos os termos em um único vetor de derivadas:
+
+- $\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{[L]}} = \begin{bmatrix} \frac{\partial \mathcal{L}}{\partial z^{[L]}_1} \\ \vdots \\ \frac{\partial \mathcal{L}}{\partial z^{[L]}_{n_L}} \end{bmatrix}$  
+- $\frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} = \begin{bmatrix} \frac{\partial \mathcal{L}}{\partial a^{[L]}_1} \\ \vdots \\ \frac{\partial \mathcal{L}}{\partial a^{[L]}_{n_L}} \end{bmatrix}$  
+- $f'^{[L]}(\mathbf{z}^{[L]}) = \begin{bmatrix} f'^{[L]}(z^{[L]}_1) \\ \vdots \\ f'^{[L]}(z^{[L]}_{n_L}) \end{bmatrix}$
+
+Juntando essas expressões, obtemos:
+
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{[L]}} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot f'^{[L]}(\mathbf{z}^{[L]})
+$$
+
+onde $\odot$ representa o **produto de Hadamard**, ou seja, o produto elemento a elemento entre vetores.
+
+---
+
+### Conclusão
+
+A fórmula:
+
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{[L]}} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot f'^{[L]}(\mathbf{z}^{[L]})
+$$
+
+é a **versão vetorial da regra da cadeia**, e surge naturalmente ao calcular as derivadas **componente a componente**. Esse resultado é fundamental para o algoritmo de retropropagação, pois estabelece o elo entre o erro na predição e os ajustes que devem ser feitos nos pesos da rede.
+
+---
+
+#### Exemplo com Classificação Binária
+
+Suponha uma tarefa de classificação binária com:
+
+- Um único neurônio na saída ($n_L = 1$),
+- Função de ativação $f^{[L]} = \sigma$ (sigmoide),
+- Função de perda $\mathcal{L}$ como entropia cruzada binária:
+
+  $$
+  \mathcal{L} = - \left[y \log a^{[L]} + (1 - y) \log(1 - a^{[L]})\right]
+  $$
+
+Neste caso, a derivada da perda em relação à saída é:
+
+$$
+\frac{\partial \mathcal{L}}{\partial a^{[L]}} = -\frac{y}{a^{[L]}} + \frac{1 - y}{1 - a^{[L]}}
+$$
+
+A derivada da função sigmoide é:
+
+$$
+f'^{[L]}(z^{[L]}) = a^{[L]}(1 - a^{[L]})
+$$
+
+Multiplicando os dois, temos a derivada em relação à pré-ativação:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z^{[L]}} = \left( -\frac{y}{a^{[L]}} + \frac{1 - y}{1 - a^{[L]}} \right) \cdot a^{[L]}(1 - a^{[L]})
+$$
+
+Em muitos casos, isso se simplifica para:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z^{[L]}} = a^{[L]} - y
+$$
+
+um resultado amplamente utilizado na prática por sua eficiência computacional.
+
+---
+
+### Conclusão
+
+O uso da **regra da cadeia** para obter as derivadas da camada de saída é uma etapa essencial da retropropagação. A presença do **produto de Hadamard** reflete a estrutura vetorial da rede e a independência entre os neurônios da mesma camada. A compreensão detalhada desse processo é crucial para dominar a teoria e a implementação do treinamento de redes neurais.
+
+
+
+    </div>'''
+  }
 
 ]
