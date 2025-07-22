@@ -1339,33 +1339,31 @@ Combinadas com transformações lineares, essas funções de ativação compõem
 '''
     },
     {
-        'titulo': 'Camadas Densas',
+        'titulo': 'Redes de Camadas Densas',
         'conteudo': '''<div align="justify">
 
-As **Redes Neurais Multicamadas** (em inglês, *Dense Feedforward Neural Networks*), também conhecidas como **Perceptrons Multicamadas** (*Multilayer Perceptrons*, ou MLPs), constituem uma das arquiteturas mais fundamentais do aprendizado profundo. Essas redes realizam transformações sucessivas sobre os dados por meio de camadas de neurônios interconectados, nas quais a informação flui em **uma única direção** — da entrada à saída — sem ciclos ou realimentações.
+As **Redes Neurais Multicamadas** (em inglês, *Dense Feedforward Neural Networks*), também conhecidas como **Perceptrons Multicamadas** (*Multilayer Perceptrons*, ou MLPs), constituem uma das arquiteturas mais fundamentais do aprendizado profundo. Essas redes realizam transformações sucessivas sobre os dados por meio de camadas de neurônios interconectados, nas quais a informação flui de uma camada entrada pelas camadas intermediárias até a camada de saída, sem ciclos ou realimentações.
 
 A estrutura básica de uma MLP é composta por três blocos principais:
 
-- Uma **camada de entrada** (*input layer*), que recebe o vetor de características do dado;
-- Uma ou mais **camadas ocultas** (*hidden layers*), responsáveis pela construção de representações internas por meio de transformações parametrizadas;
-- Uma **camada de saída** (*output layer*), que fornece a predição final da rede.
+1. Uma **camada de entrada** (*input layer*), que recebe o vetor de características dos dados;
+2. Uma ou mais **camadas ocultas** (*hidden layers*), responsáveis pela construção de representações internas por meio de transformações parametrizadas;
+3. Uma **camada de saída** (*output layer*), que fornece a predição final da rede.
 
+<svg xmlns="http://www.w3.org/2000/svg" style="cursor: move;" width="978" height="474"><g transform="translate(-470.773428611,-474.573277333) scale(1.0562276533121615)"><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(128, 128, 255); fill: none;" marker-end="" d="M768.6666666666666,611C863.1666666666666,611 863.1666666666666,489.5 957.6666666666666,489.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 143, 143); fill: none;" marker-end="" d="M768.6666666666666,611C863.1666666666666,611 863.1666666666666,570.5 957.6666666666666,570.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(203, 203, 255); fill: none;" marker-end="" d="M768.6666666666666,611C863.1666666666666,611 863.1666666666666,651.5 957.6666666666666,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(152, 152, 255); fill: none;" marker-end="" d="M768.6666666666666,692C863.1666666666666,692 863.1666666666666,489.5 957.6666666666666,489.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(130, 130, 255); fill: none;" marker-end="" d="M768.6666666666666,692C863.1666666666666,692 863.1666666666666,570.5 957.6666666666666,570.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(149, 149, 255); fill: none;" marker-end="" d="M768.6666666666666,692C863.1666666666666,692 863.1666666666666,651.5 957.6666666666666,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 192, 192); fill: none;" marker-end="" d="M957.6666666666666,489.5C1052.1666666666667,489.5 1052.1666666666667,573.5 1146.6666666666667,573.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(62, 62, 255); fill: none;" marker-end="" d="M957.6666666666666,489.5C1052.1666666666667,489.5 1052.1666666666667,651.5 1146.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 54, 54); fill: none;" marker-end="" d="M957.6666666666666,570.5C1052.1666666666667,570.5 1052.1666666666667,573.5 1146.6666666666667,573.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(159, 159, 255); fill: none;" marker-end="" d="M957.6666666666666,570.5C1052.1666666666667,570.5 1052.1666666666667,651.5 1146.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(71, 71, 255); fill: none;" marker-end="" d="M957.6666666666666,651.5C1052.1666666666667,651.5 1052.1666666666667,573.5 1146.6666666666667,573.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(117, 117, 255); fill: none;" marker-end="" d="M957.6666666666666,651.5C1052.1666666666667,651.5 1052.1666666666667,651.5 1146.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 157, 157); fill: none;" marker-end="" d="M1146.6666666666667,573.5C1241.1666666666667,573.5 1241.1666666666667,651.5 1335.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(116, 116, 255); fill: none;" marker-end="" d="M1146.6666666666667,651.5C1241.1666666666667,651.5 1241.1666666666667,651.5 1335.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(46, 46, 255); fill: none;" marker-end="" d="M768.6666666666666,611C863.1666666666666,611 863.1666666666666,732.5 957.6666666666666,732.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(9, 9, 255); fill: none;" marker-end="" d="M768.6666666666666,611C863.1666666666666,611 863.1666666666666,813.5 957.6666666666666,813.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 72, 72); fill: none;" marker-end="" d="M768.6666666666666,692C863.1666666666666,692 863.1666666666666,732.5 957.6666666666666,732.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 13, 13); fill: none;" marker-end="" d="M768.6666666666666,692C863.1666666666666,692 863.1666666666666,813.5 957.6666666666666,813.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(180, 180, 255); fill: none;" marker-end="" d="M957.6666666666666,732.5C1052.1666666666667,732.5 1052.1666666666667,573.5 1146.6666666666667,573.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 26, 26); fill: none;" marker-end="" d="M957.6666666666666,732.5C1052.1666666666667,732.5 1052.1666666666667,651.5 1146.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(99, 99, 255); fill: none;" marker-end="" d="M957.6666666666666,813.5C1052.1666666666667,813.5 1052.1666666666667,573.5 1146.6666666666667,573.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(137, 137, 255); fill: none;" marker-end="" d="M957.6666666666666,813.5C1052.1666666666667,813.5 1052.1666666666667,651.5 1146.6666666666667,651.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 102, 102); fill: none;" marker-end="" d="M957.6666666666666,489.5C1052.1666666666667,489.5 1052.1666666666667,729.5 1146.6666666666667,729.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(67, 67, 255); fill: none;" marker-end="" d="M957.6666666666666,570.5C1052.1666666666667,570.5 1052.1666666666667,729.5 1146.6666666666667,729.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 80, 80); fill: none;" marker-end="" d="M957.6666666666666,651.5C1052.1666666666667,651.5 1052.1666666666667,729.5 1146.6666666666667,729.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(30, 30, 255); fill: none;" marker-end="" d="M957.6666666666666,732.5C1052.1666666666667,732.5 1052.1666666666667,729.5 1146.6666666666667,729.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(236, 236, 255); fill: none;" marker-end="" d="M957.6666666666666,813.5C1052.1666666666667,813.5 1052.1666666666667,729.5 1146.6666666666667,729.5"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 126, 126); fill: none;" marker-end="" d="M1146.6666666666667,729.5C1241.1666666666667,729.5 1241.1666666666667,651.5 1335.6666666666667,651.5"></path><circle r="14.5" class="node" id="0_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="768.6666666666666" cy="611"></circle><circle r="14.5" class="node" id="0_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="768.6666666666666" cy="692"></circle><circle r="14.5" class="node" id="1_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="957.6666666666666" cy="489.5"></circle><circle r="14.5" class="node" id="1_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="957.6666666666666" cy="570.5"></circle><circle r="14.5" class="node" id="1_2" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="957.6666666666666" cy="651.5"></circle><circle r="14.5" class="node" id="1_3" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="957.6666666666666" cy="732.5"></circle><circle r="14.5" class="node" id="1_4" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="957.6666666666666" cy="813.5"></circle><circle r="14.5" class="node" id="2_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="1146.6666666666667" cy="573.5"></circle><circle r="14.5" class="node" id="2_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="1146.6666666666667" cy="651.5"></circle><circle r="14.5" class="node" id="2_2" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="1146.6666666666667" cy="729.5"></circle><circle r="14.5" class="node" id="3_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="1335.6666666666667" cy="651.5"></circle><text class="text" dy=".35em" style="font-size: 14px;" x="733.6666666666666" y="862.5">Camada de Entrada (ℝ²) </text><text class="text" dy=".35em" style="font-size: 14px;" x="922.6666666666666" y="862.5">Camada Oculta (ℝ⁵)</text><text class="text" dy=".35em" style="font-size: 14px;" x="1111.6666666666667" y="862.5">Camada Oculta (ℝ³)</text><text class="text" dy=".35em" style="font-size: 14px;" x="1320.6666666666667" y="862.5"> Saída (ℝ¹)</text></g><defs><marker id="arrow" viewBox="0 -5 10 10" markerWidth="7" markerHeight="7" orient="auto" refX="52.599999999999994"><path d="M0,-5L10,0L0,5" style="stroke: rgb(80, 80, 80); fill: none;"></path></marker></defs></svg>
 
-Cada **camada** da rede pode ser interpretada como um **bloco funcional** que transforma um vetor de entrada $\mathbf{a}^{(\ell-1)} \in \mathbb{R}^{m_{\ell-1}}$ em um vetor de saída $\mathbf{a}^{(\ell)} \in \mathbb{R}^{m_\ell}$, por meio de uma transformação afim seguida de uma função ativação:
+Matematicamente, cada **camada** da rede pode ser interpretada como um **bloco funcional** que transforma um vetor de entrada $\mathbf{a}^{(\ell-1)} \in \mathbb{R}^{m_{\ell-1}}$ em um vetor de saída $\mathbf{a}^{(\ell)} \in \mathbb{R}^{m_\ell}$, por meio de uma transformação afim seguida de uma função ativação:
 
 $$
 \mathbf{z}^{(\ell)} = \mathbf{W}^{(\ell)} \mathbf{a}^{(\ell-1)} + \mathbf{b}^{(\ell)} \\
 \mathbf{a}^{(\ell)} = f^{(\ell)}\left(\mathbf{z}^{(\ell)}\\right)
 $$
 
-onde:
+em que:
 
-- $\mathbf{W}^{(\ell)} \in \mathbb{R}^{m_\ell \\times m_{\ell-1}}$ é a **matriz de pesos** da camada $\ell$;
-- $\mathbf{b}^{(\ell)} \in \mathbb{R}^{m_\ell}$ é o **vetor de vieses**;
-- $f^{(\ell)}$ é a **função de ativação**, aplicada elemento a elemento.
-
-Essa estrutura permite que cada camada aprenda uma transformação dos dados, extraindo representações progressivamente mais abstratas conforme os sinais avançam pela rede.
-
+1. $\mathbf{W}^{(\ell)} \in \mathbb{R}^{m_\ell \\times m_{\ell-1}}$ é a **matriz de pesos** da camada $\ell$;
+2. $\mathbf{b}^{(\ell)} \in \mathbb{R}^{m_\ell}$ é o **vetor de vieses**;
+3. $f^{(\ell)}$ é a **função de ativação**, aplicada elemento a elemento.
 
 A propagação da informação ao longo da de camadas sucessivas rede ocorre de forma recursiva:
 
@@ -1380,7 +1378,7 @@ A propagação da informação ao longo da de camadas sucessivas rede ocorre de 
    \mathbf{a}^{(\ell)} = f^{(\ell)}\left(\mathbf{z}^{(\ell)}\\right)
    $$
 
-O vetor final $\hat{\mathbf{y}} = \mathbf{a}^{(L)}$ representa a saída da rede e é utilizado para realizar a tarefa desejada (como classificação ou regressão).
+O vetor final $\hat{\mathbf{y}} = \mathbf{a}^{(L)}$ representa a saída da rede e é utilizado para realizar a tarefa desejada, como por exemplo, realizar uma classificação ou regressão.
 
 
 Equivalente ao processo recursivo, a MLP pode ser representada como uma **função composta** (*composite function*) de operações parametrizadas:
@@ -1391,30 +1389,30 @@ $$
 
 Essa estrutura modular e hierárquica é o que permite às redes neurais aprenderem **funções complexas**, ajustando seus parâmetros com base em dados de treinamento.
 
-
 Como mencionado no capítulo anterior, o treinamento de uma MLP é realizado por meio de um processo de **aprendizado supervisionado**, com base em um conjunto de exemplos rotulados. O processo envolve:
 
-- A definição de uma **função de custo** $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$, que quantifica o erro entre a saída prevista $\hat{\mathbf{y}}$ e o valor verdadeiro $\mathbf{y}$;
-- A aplicação de um **algoritmo de otimização** (como o **gradiente descendente estocástico**, ou *Stochastic Gradient Descent – SGD*) para atualizar os parâmetros da rede;
-- O uso da **retropropagação do erro** (*backpropagation*), um método eficiente para computar os gradientes de $\mathcal{L}$ em relação a todos os pesos e vieses, camada por camada, utilizando a regra da cadeia.
+1. A definição de uma **função de custo** $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$, que quantifica o erro entre a saída prevista $\hat{\mathbf{y}}$ e o valor verdadeiro $\mathbf{y}$;
+2. A aplicação de um **algoritmo de otimização** (como o **gradiente descendente estocástico**, ou *Stochastic Gradient Descent – SGD*) para atualizar os parâmetros da rede;
+3. O uso da **retropropagação do erro** (*backpropagation*), um método eficiente para computar os gradientes de $\mathcal{L}$ em relação a todos os pesos e vieses, camada por camada, utilizando a regra da cadeia.
 
-<svg xmlns="http://www.w3.org/2000/svg" style="cursor: move;" width="1366" height="300"><g transform="translate(-334.3113555654279,-180.65504441795053) scale(1.0)"><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 98, 108); fill: none;" marker-end="" d="M513,271C612,271 612,315 711,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(73, 62, 255); fill: none;" marker-end="" d="M513,271C612,271 612,405 711,405"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(69, 58, 255); fill: none;" marker-end="" d="M513,359C612,359 612,315 711,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 141, 149); fill: none;" marker-end="" d="M513,359C612,359 612,405 711,405"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(184, 180, 255); fill: none;" marker-end="" d="M711,225C810,225 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(148, 141, 255); fill: none;" marker-end="" d="M711,315C810,315 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 85, 97); fill: none;" marker-end="" d="M711,405C810,405 810,315 909,315"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(153, 147, 255); fill: none;" marker-end="" d="M513,271C612,271 612,225 711,225"></path><path class="link" style="stroke-width: 2px; stroke-opacity: 1; stroke: rgb(255, 163, 169); fill: none;" marker-end="" d="M513,359C612,359 612,225 711,225"></path><circle r="14" class="node" id="0_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="513" cy="271"></circle><circle r="14" class="node" id="0_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="513" cy="359"></circle><circle r="14" class="node" id="1_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="225"></circle><text class="text" dy=".35em" style="font-size: 12px;" x="478" y="453">Entrada ( ℝ² )</text><text class="text" dy=".35em" style="font-size: 12px;" x="676" y="453">Oculta (ℝ³)</text><circle r="14" class="node" id="1_1" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="315"></circle><circle r="14" class="node" id="1_2" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="711" cy="405"></circle><circle r="14" class="node" id="2_0" style="fill: rgb(255, 255, 255); stroke: rgb(51, 51, 51);" cx="909" cy="315"></circle><text class="text" dy=".35em" style="font-size: 12px;" x="874" y="453">Saída (ℝ¹)</text></g><defs><marker id="arrow" viewBox="0 -5 10 10" markerWidth="7" markerHeight="7" orient="auto" refX="51.199999999999996"><path d="M0,-5L10,0L0,5" style="stroke: rgb(80, 80, 80); fill: none;"></path></marker></defs></svg>
 Em síntese, as redes neurais densas de múltiplas camadas constituem uma classe de redes neurais que agem como um transformação de vetores por meio de operações matriciais e aplicações de funções de ativação. Sua arquitetura recursiva e composicional permite representar uma ampla variedade de funções e padrões, fazendo de tais redes uma base conceitual sólida e uma ferramenta prática amplamente utilizada na modelagem matemática de dados.
 
 A seguir, apresentamos com mais detalhes cada um desses componentes fundamentais.       
         </div>'''
     },
   {
-    'titulo': 'Treinamento Em Redes de Regressão',
+    'titulo': 'Treinamento Em Redes de Neurais Artificiais',
     'conteudo': '''<div align="justify">
 
-Seja uma rede neural com saída escalar utilizada em uma tarefa de **regressão**, cuja última camada contém um único neurônio. Para facilitar a compreensão dos cálculos, consideramos apenas **uma amostra** do conjunto de dados e nesse caso, a **função de perda quadrática** é definida como:
+Como já mencionamos anteriormente, o **treinamento** de uma rede neural consiste em encontrar os valores adequados dos pesos e vieses tendo em vista  a realização de alguma tarefa específica para a rede.
+Matematicamente falando, o processo de treinamento nada mais é do que encontrar os valores dos parâmetros da rede que minimizam a distância entre o valor predito pela rede e o valor real observado.        
+
+Para fundamentar essa ideia, consideremos uma rede cuja última camada contém um único neurônio. Para facilitar a compreensão dos cálculos, consideramos apenas **uma amostra** do conjunto de dados e nesse caso, a **função de perda quadrática** é definida como:
 
 $$
 \mathcal{L} = \\frac{1}{2} \left( a^{[L]} - y \\right)^2
 $$
 
----
 
 ###### Cálculo dos Gradientes Para a Última Camada
 
@@ -1595,7 +1593,7 @@ $$
 \\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[L-1]}} = \\boldsymbol{\delta}^{[L-1]} \cdot \left( \mathbf{a}^{[L-2]} \\right)^\\top
 $$
 
-e as derivadas da função de perda em relação ao sviéses $b^{[L-1]}$ resultam em:
+e as derivadas da função de perda em relação ao svieses $b^{[L-1]}$ resultam em:
 $$
 \\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[L-1]}} = \\boldsymbol{\delta}^{[L-1]}
 $$
@@ -1636,7 +1634,7 @@ $$
 \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[\ell]}} = \delta^{[\ell]} \cdot \left( \mathbf{a}^{[\ell-1]} \right)^\top
 $$
 
-- Gradiente dos viéses:
+- Gradiente dos vieses:
 
 $$
 \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[\ell]}} = \delta^{[\ell]}
