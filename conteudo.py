@@ -1576,24 +1576,75 @@ $$
 (a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \cdot w_i^{[L]} \cdot f'^{[L-1]}(z_i^{[L-1]}) \cdot a_j^{[L-2]}
 $$
 
-Essa expressão mostra que:
 
-- O **gradiente local** $ \\frac{\partial \mathcal{L}}{\partial w_{ij}^{[L-1]}} $ é proporcional ao erro da predição,
-- É modulado pelo **produto das derivadas das ativações**,
-- E pelo caminho específico percorrido da entrada $ a_j^{[L-2]} $ até a saída $ a^{[L]} $, passando por $ w_{ij}^{[L-1]} $ e $ w_i^{[L]} $.
+Agora, seja $ b_i^{[L-1]}$ o viés do neurônio $i$ da camada $L-1$. Novamente pela regra da cadeia, temos:
 
-Para simplificar a notação, definimos o vetor de **deltas** da camada $ L-1 $ como:
-- $ \delta^{[L]} := (a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \in \mathbb{R} $
-- $ \\boldsymbol{\delta}^{[L-1]} := \delta^{[L]} \cdot \left( \mathbf{w}^{[L]} \odot f'^{[L-1]}(\mathbf{z}^{[L-1]}) \\right) \in \mathbb{R}^{n_{L-1}} $
-- $ \mathbf{a}^{[L-2]} \in \mathbb{R}^{n_{L-2}} $
+$$
+\\frac{\partial \mathcal{L}}{\partial b_i^{[L-1]}} =
+(a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \cdot w_i^{[L]} \cdot f'^{[L-1]}(z_i^{[L-1]})
+$$
 
+
+Podemos ainda escrever essas operações em forma matricial. Para simplificar a notação, consideramos as seguintes definições:
+1. $ \delta^{[L]} := (a^{[L]} - y) \cdot f'^{[L]}(z^{[L]}) \in \mathbb{R} $
+2. $ \\boldsymbol{\delta}^{[L-1]} := \delta^{[L]} \cdot \left( \mathbf{w}^{[L]} \odot f'^{[L-1]}(\mathbf{z}^{[L-1]}) \\right) \in \mathbb{R}^{n_{L-1}} $
+3. $ \mathbf{a}^{[L-2]} \in \mathbb{R}^{n_{L-2}} $
+
+Daí, temos que as derivadas da função de perda em relação aos pesos $w_{ij}^{[L-1]}$ resultam em:
 $$
 \\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[L-1]}} = \\boldsymbol{\delta}^{[L-1]} \cdot \left( \mathbf{a}^{[L-2]} \\right)^\\top
 $$
 
-Essa expressão é o produto externo entre o vetor de erros propagados e o vetor de ativações da camada anterior.
+e as derivadas da função de perda em relação ao sviéses $b^{[L-1]}$ resultam em:
+$$
+\\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[L-1]}} = \\boldsymbol{\delta}^{[L-1]}
+$$
 
+###### Retropropagação do Erro
 
+Por fim, podemos calcular os gradientes para as camadas anteriores, seguindo a mesma lógica de decomposição e aplicação da regra da cadeia. A cada camada, o vetor de deltas é atualizado com base nos pesos e nas ativações da camada subsequente.
+Esse procedimento é conhecido como **retropropagação do erro** (*backpropagation*) e é fundamental para o treinamento eficiente de redes neurais profundas. 
+
+Isto é, dada uma rede com camadas $ \ell = 1, 2, \dots, L $, definimos:
+
+- $ \mathbf{z}^{[\ell]} = \mathbf{W}^{[\ell]} \mathbf{a}^{[\ell-1]} + \mathbf{b}^{[\ell]} $
+- $ \mathbf{a}^{[\ell]} = f^{[\ell]}(\mathbf{z}^{[\ell]}) $
+
+Para a camada de saída $ L $:
+
+$$
+\delta^{[L]} = \\frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot f'^{[L]}(\mathbf{z}^{[L]})
+$$
+
+- Para regressão com ativação linear:
+  \( \delta^{[L]} = \mathbf{a}^{[L]} - \mathbf{y} \)
+
+---
+Recorrência para $ \ell = L-1, \dots, 1 $
+
+$$
+\delta^{[\ell]} = \left( \mathbf{W}^{[\ell+1]^\\top} \delta^{[\ell+1]} \\right) \odot f'^{[\ell]}(\mathbf{z}^{[\ell]})
+$$
+
+---
+
+#### 🔹 Passo 3: Cálculo dos Gradientes
+
+- Gradiente dos pesos:
+
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[\ell]}} = \delta^{[\ell]} \cdot \left( \mathbf{a}^{[\ell-1]} \right)^\top
+$$
+
+- Gradiente dos viéses:
+
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[\ell]}} = \delta^{[\ell]}
+$$
+
+---
+
+Essa recursão permite computar os gradientes de todas as camadas de maneira eficiente e vetorizada.
 
 ---
 
